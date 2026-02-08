@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   fasto:
-    image: fasto:latest
+    # Use GitHub Container Registry image (automatically built by GitHub Actions)
+    # For local builds, use: image: fasto:latest
+    image: ghcr.io/rikcancode/fasto:latest
     container_name: fasto
     ports:
       - target: 80
@@ -47,7 +49,7 @@ x-casaos:
   icon: https://raw.githubusercontent.com/yourusername/fasto/main/icon.png
   tagline:
     en_us: Track your weight loss journey with milestones and goals
-  thumbnail: https://raw.githubusercontent.com/yourusername/fasto/main/icon.png
+  thumbnail: https://raw.githubusercontent.com/Rikcancode/fasto/master/public/icon.png
   title:
     en_us: Fasto
   tips:
