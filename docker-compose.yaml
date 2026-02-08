@@ -7,15 +7,13 @@ services:
     image: ghcr.io/rikcancode/fasto:latest
     container_name: fasto
     ports:
-      - target: 80
-        published: ${WEBUI_PORT:-3007}
-        protocol: tcp
+      - "3007:80"
     environment:
       - PORT=80
       - NODE_ENV=production
       - WITHINGS_CLIENT_ID=${WITHINGS_CLIENT_ID}
       - WITHINGS_CLIENT_SECRET=${WITHINGS_CLIENT_SECRET}
-      - WITHINGS_REDIRECT_URI=${WITHINGS_REDIRECT_URI:-http://192.168.68.74:${WEBUI_PORT:-3007}/api/withings/callback}
+      - WITHINGS_REDIRECT_URI=${WITHINGS_REDIRECT_URI:-http://192.168.68.74:3007/api/withings/callback}
     volumes:
       - type: bind
         source: /DATA/AppData/fasto/data
@@ -59,11 +57,11 @@ x-casaos:
         
         1. You need a Withings account and API credentials
         2. Get your Client ID and Secret from: https://account.withings.com/oauth2_user/authorize2
-        3. Set up your Withings app callback URL to: `http://YOUR_ZIMAOS_IP:${WEBUI_PORT}/api/withings/callback`
+        3. Set up your Withings app callback URL to: `http://YOUR_ZIMAOS_IP:3007/api/withings/callback`
         4. After installation, configure your Withings credentials in the app settings
         
         **Default Configuration:**
-        - Web UI Port: Automatically assigned by ZimaOS
+        - Web UI Port: 3007
         - Data Storage: `/DATA/AppData/fasto/data`
   index: /
-  port_map: ${WEBUI_PORT:-3007}
+  port_map: 3007
