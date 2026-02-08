@@ -64,4 +64,4 @@ x-casaos:
         - Web UI Port: 3007
         - Data Storage: `/DATA/AppData/fasto/data`
   index: /
-  port_map: 3007
+  port_map: "3007"
