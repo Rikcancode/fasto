@@ -1,7 +1,7 @@
 name: fasto
 services:
   fasto:
-    image: rikcodes/fasto:latest
+    image: docker.io/rikcodes/fasto:latest
     container_name: fasto
     ports:
       - mode: ingress
