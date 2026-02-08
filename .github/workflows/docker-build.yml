@@ -15,7 +15,7 @@ on:
 
 env:
   REGISTRY: docker.io
-  IMAGE_NAME: Rikcancode/fasto
+  IMAGE_NAME: rikcancode/fasto
 
 jobs:
   build:
