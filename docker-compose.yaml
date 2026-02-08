@@ -1,13 +1,13 @@
-version: '3.8'
-
+name: fasto
 services:
   fasto:
-    # Build locally on ZimaOS (avoids authentication issues)
-    build: .
     image: fasto:latest
     container_name: fasto
     ports:
-      - "3007:80"
+      - mode: ingress
+        target: 80
+        published: "3007"
+        protocol: tcp
     environment:
       - PORT=80
       - NODE_ENV=production
@@ -18,6 +18,8 @@ services:
       - type: bind
         source: /DATA/AppData/fasto/data
         target: /app/data
+        bind:
+          create_host_path: true
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "node", "-e", "require('http').get('http://localhost/api/goals', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
@@ -32,7 +34,6 @@ services:
     read_only: true
     tmpfs:
       - /tmp
-
 x-casaos:
   architectures:
     - amd64
@@ -65,3 +66,4 @@ x-casaos:
         - Data Storage: `/DATA/AppData/fasto/data`
   index: /
   port_map: "3007"
+  scheme: http
