@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  fasto:
+    # For ZimaOS: Build the image first using: docker build -f Dockerfile --target production -t fasto:latest .
+    image: fasto:latest
+    container_name: fasto
+    ports:
+      - "3007:80"  # Host Port 3007 -> Container Port 80
+    environment:
+      - PORT=80
+      - NODE_ENV=production
+      - WITHINGS_CLIENT_ID=${WITHINGS_CLIENT_ID}
+      - WITHINGS_CLIENT_SECRET=${WITHINGS_CLIENT_SECRET}
+      - WITHINGS_REDIRECT_URI=${WITHINGS_REDIRECT_URI:-http://localhost/api/withings/callback}
+    volumes:
+      # Mount data directory so goals.json and tokens persist
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost/api/goals', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    security_opt:
+      - no-new-privileges:true
+    cap_add:
+      - NET_BIND_SERVICE
+    read_only: true
+    tmpfs:
+      - /tmp
+    networks:
+      - fasto-network
+
+networks:
+  fasto-network:
+    driver: bridge

@@ -1,0 +1,63 @@
+{
+  "weeklyGoals": [
+    {
+      "weekStart": "2026-01-19",
+      "weightKg": 91.1,
+      "bodyFatPct": 31.7
+    },
+    {
+      "weekStart": "2026-02-02",
+      "weightKg": 89.6,
+      "bodyFatPct": 30.6
+    },
+    {
+      "weekStart": "2026-02-16",
+      "weightKg": 88.1,
+      "bodyFatPct": 29.5
+    },
+    {
+      "weekStart": "2026-03-02",
+      "weightKg": 86.6,
+      "bodyFatPct": 28.4
+    },
+    {
+      "weekStart": "2026-03-16",
+      "weightKg": 85.1,
+      "bodyFatPct": 27.3
+    },
+    {
+      "weekStart": "2026-03-29",
+      "weightKg": 83.6,
+      "bodyFatPct": 26.2
+    },
+    {
+      "weekStart": "2026-04-12",
+      "weightKg": 82.1,
+      "bodyFatPct": 25.1
+    },
+    {
+      "weekStart": "2026-04-26",
+      "weightKg": 80.6,
+      "bodyFatPct": 24
+    },
+    {
+      "weekStart": "2026-05-10",
+      "weightKg": 79.1,
+      "bodyFatPct": 23
+    },
+    {
+      "weekStart": "2026-05-24",
+      "weightKg": 78,
+      "bodyFatPct": 22
+    }
+  ],
+  "ultimateGoal": {
+    "weightKg": 78,
+    "bodyFatPct": 23,
+    "targetDate": "2026-05-24"
+  },
+  "goalPeriod": {
+    "startDate": "2026-01-19",
+    "endDate": "2026-05-24"
+  }
+}

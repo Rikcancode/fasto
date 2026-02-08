@@ -1,0 +1,30 @@
+# Fasto Application Configuration
+# Note: Sensitive credentials (client_id, client_secret) should be set in .env file, not here
+
+app:
+  name: "Fasto"
+  version: "1.0.0"
+
+server:
+  port: 80
+  host: "0.0.0.0"
+  environment: "production"
+
+withings:
+  # These values should be set in .env file for security
+  # client_id: "your_client_id_here"
+  # client_secret: "your_client_secret_here"
+  redirect_uri: "http://192.168.68.74:3007/api/withings/callback"  # Update with your ZimaOS IP and port
+  api_base_url: "https://wbsapi.withings.net"
+
+deployment:
+  platform: "ZimaOS"
+  ip_address: "192.168.68.74"
+  port: 3007  # Host port (container still uses port 80 internally)
+
+data:
+  goals_path: "./data/goals.json"
+  token_path: "./data/withings_token.json"
+
+cache:
+  ttl_minutes: 5  # Measurement cache TTL in minutes

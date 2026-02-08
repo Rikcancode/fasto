@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  fasto:
+    image: fasto:latest
+    container_name: fasto
+    ports:
+      - target: 80
+        published: ${WEBUI_PORT:-3007}
+        protocol: tcp
+    environment:
+      - PORT=80
+      - NODE_ENV=production
+      - WITHINGS_CLIENT_ID=${WITHINGS_CLIENT_ID}
+      - WITHINGS_CLIENT_SECRET=${WITHINGS_CLIENT_SECRET}
+      - WITHINGS_REDIRECT_URI=${WITHINGS_REDIRECT_URI:-http://192.168.68.74:${WEBUI_PORT:-3007}/api/withings/callback}
+    volumes:
+      - type: bind
+        source: /DATA/AppData/fasto/data
+        target: /app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost/api/goals', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    security_opt:
+      - no-new-privileges:true
+    cap_add:
+      - NET_BIND_SERVICE
+    read_only: true
+    tmpfs:
+      - /tmp
+
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+    - arm
+  main: fasto
+  author: Fasto Team
+  category: Health
+  description:
+    en_us: Fasto is a weight loss journey tracking dashboard with Withings integration. Track your weight and body fat percentage against bi-weekly milestones and ultimate goals with beautiful charts and visualizations.
+  developer: Fasto
+  icon: https://raw.githubusercontent.com/yourusername/fasto/main/icon.png
+  tagline:
+    en_us: Track your weight loss journey with milestones and goals
+  thumbnail: https://raw.githubusercontent.com/yourusername/fasto/main/icon.png
+  title:
+    en_us: Fasto
+  tips:
+    before_install:
+      en_us: |
+        **Before Installation:**
+        
+        1. You need a Withings account and API credentials
+        2. Get your Client ID and Secret from: https://account.withings.com/oauth2_user/authorize2
+        3. Set up your Withings app callback URL to: `http://YOUR_ZIMAOS_IP:${WEBUI_PORT}/api/withings/callback`
+        4. After installation, configure your Withings credentials in the app settings
+        
+        **Default Configuration:**
+        - Web UI Port: Automatically assigned by ZimaOS
+        - Data Storage: `/DATA/AppData/fasto/data`
+  index: /
+  port_map: ${WEBUI_PORT:-3007}

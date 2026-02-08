@@ -1,0 +1,73 @@
+# Fasto Application Configuration
+# This file can be used for application settings and deployment configuration
+
+app:
+  name: "Fasto"
+  version: "1.0.0"
+  description: "Weight loss journey tracking dashboard with Withings integration"
+
+server:
+  port: 80
+  host: "0.0.0.0"
+  environment: "production"
+
+withings:
+  # These values should be set in .env file for security
+  # client_id: "your_client_id_here"
+  # client_secret: "your_client_secret_here"
+  redirect_uri: "http://192.168.68.74/api/withings/callback"
+  api_base_url: "https://wbsapi.withings.net"
+
+deployment:
+  platform: "ZimaOS"
+  ip_address: "192.168.68.74"
+  port: 80
+  docker_compose_file: "fasto.yml"
+  
+  volumes:
+    - "./data:/app/data"
+  
+  environment_variables:
+    - "PORT=80"
+    - "NODE_ENV=production"
+    - "HOST=0.0.0.0"
+
+data:
+  goals_file: "./data/goals.json"
+  token_file: "./data/withings_token.json"
+  
+  default_goals:
+    weeklyGoals: []
+    ultimateGoal:
+      weightKg: null
+      bodyFatPct: null
+      targetDate: null
+    goalPeriod:
+      startDate: null
+      endDate: null
+
+ui:
+  title: "Fasto"
+  subtitle: "Track your weight loss journey with milestones and goals"
+  
+  charts:
+    default_date_range: "plan"  # Options: "plan" or "custom"
+    measurement_types:
+      - "weight"
+      - "bodyFat"
+  
+  metrics:
+    weight:
+      unit: "kg"
+      icon: "/icon.png"
+    bodyFat:
+      unit: "%"
+      icon: "/icon.png"
+
+features:
+  oauth_flow: true
+  goal_management: true
+  milestone_tracking: true
+  chart_visualization: true
+  date_range_selection: true
+  mobile_responsive: true

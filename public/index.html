@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fasto - Weight Loss Dashboard</title>
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+  </head>
+  <body>
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <img src="/icon.png" alt="Fasto" class="app-logo" />
+        <h2 class="logo-small">Fasto</h2>
+      </div>
+      <ul class="nav-menu">
+        <li>
+          <div class="nav-status">
+            <span class="status-icon" id="status-icon">⚪</span>
+            <span class="status-text" id="status-text">Not Connected</span>
+          </div>
+        </li>
+        <li><a href="#" id="nav-connect-withings" class="nav-item">
+          <span class="nav-icon">🔗</span>
+          <span>Connect Withings</span>
+        </a></li>
+        <li><a href="#" id="nav-plan-settings" class="nav-item">
+          <span class="nav-icon">⚙️</span>
+          <span>Plan Settings</span>
+        </a></li>
+        <li><a href="#" id="nav-change-account" class="nav-item">
+          <span class="nav-icon">👤</span>
+          <span>Change Account</span>
+        </a></li>
+      </ul>
+    </nav>
+    <div id="sidebar-overlay" class="sidebar-overlay" style="display: none;"></div>
+    <main class="container">
+      <button id="menu-toggle" class="menu-toggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <section class="cards">
+        <div class="card">
+          <div class="card-header">
+            <svg viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="card-icon weight-icon">
+              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g transform="translate(1.000000, 0.000000)" fill="currentColor">
+                  <rect x="8" y="9" width="0.905" height="0.92"></rect>
+                  <path d="M11.017,4.42369478 C11.017,3.69176707 10.42,3.01706827 9.682,3.01706827 L8.913,3.01706827 C8.948,2.84839357 8.97,2.67369478 8.97,2.4939759 C8.97,1.11947791 7.855,0 6.486,0 C5.116,0 4.002,1.11947791 4.002,2.4939759 C4.002,2.67369478 4.023,2.84839357 4.059,3.01706827 L3.315,3.01706827 C2.58,3.01706827 1.983,3.69176707 1.983,4.42369478 L0.00800000003,13.6736948 C0.00800000003,14.4066265 0.606,15 1.344,15 L11.657,15 C12.393,15 12.99,14.4066265 12.99,13.6736948 L11.017,4.42369478 L11.017,4.42369478 Z M5,2.50802644 C5,1.67610954 5.67272158,1 6.50046978,1 C7.32633887,1 8,1.67610954 8,2.50802644 C8,2.68177526 7.96523645,2.84419263 7.9116818,3 L5.08925775,3 C5.03476355,2.84513692 5,2.68177526 5,2.50802644 L5,2.50802644 Z M6.047,9.005 L5.045,9.005 L5.045,9.953 L6.047,9.953 L6.047,11.02 L4.982,11.02 L4.982,10.015 L4.043,10.015 L4.043,11.02 L2.962,11.02 L2.962,5.911 L4.043,5.911 L4.043,8.942 L4.982,8.942 L4.982,7.937 L6.047,7.937 L6.047,9.005 L6.047,9.005 Z M10.047,13.023 L9.047,13.023 L9.047,14.046 L7.985,14.046 L7.985,13.038 L8.049,12.975 L8.941,12.958 L8.953,11.021 L6.986,11.021 L6.978,7.952 L10.048,7.965 L10.048,13.023 L10.047,13.023 Z"></path>
+                </g>
+              </g>
+            </svg>
+            <h2>Weight</h2>
+          </div>
+          <div class="metrics-grid">
+            <div class="metric-item">
+              <p class="metric-label">Last</p>
+              <p class="metric-value" id="weight-last">--</p>
+            </div>
+            <div class="metric-item">
+              <p class="metric-label">Next Milestone</p>
+              <p class="metric-value" id="weight-next-milestone">--</p>
+            </div>
+            <div class="metric-item target-item">
+              <p class="metric-label">Target</p>
+              <p class="metric-value target-value" id="weight-target">--</p>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" class="card-icon fat-icon">
+              <path fill="currentColor" d="M164.803 436.846q25.188 8.773 59.822 11.544V491h-59.822v-54.154zM292.843 491h59.822v-54.574q-26.763 8.826-59.822 11.702V491zM255.606 21c-27.066 0-49.011 28.547-49.011 63.757 0 35.211 21.945 63.758 49.011 63.758 27.067 0 49.012-28.547 49.012-63.758 0-35.21-21.945-63.757-49.012-63.757zm220.68 286.337c0-89.733-68.092-165.906-160.71-189.205a83.226 83.226 0 0 1-11.997 21.945c-12.32 16.036-29.806 25.188-47.962 25.188-18.156 0-35.683-9.194-47.962-25.188a83.184 83.184 0 0 1-11.933-21.777c-92.283 23.498-160.008 99.524-160.008 189.037H68.25a144.202 144.202 0 0 1 15.931-66.193 148.578 148.578 0 0 0-3.232 30.803c0 88.893 30.635 160.92 175.068 160.92 153.332 0 175.068-72.08 175.068-160.972a148.075 148.075 0 0 0-3.233-30.761 144.17 144.17 0 0 1 15.9 66.203h32.535z"></path>
+            </svg>
+            <h2>Body Fat %</h2>
+          </div>
+          <div class="metrics-grid">
+            <div class="metric-item">
+              <p class="metric-label">Last</p>
+              <p class="metric-value" id="fat-last">--</p>
+            </div>
+            <div class="metric-item">
+              <p class="metric-label">Next Milestone</p>
+              <p class="metric-value" id="fat-next-milestone">--</p>
+            </div>
+            <div class="metric-item target-item">
+              <p class="metric-label">Target</p>
+              <p class="metric-value target-value" id="fat-target">--</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="date-range-section" id="date-range-section" style="display: none;">
+        <div class="date-range-card">
+          <h3>Chart Date Range</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Start Date</label>
+              <input type="date" id="chart-start-date" />
+            </div>
+            <div class="form-group">
+              <label>End Date</label>
+              <input type="date" id="chart-end-date" />
+            </div>
+            <button type="button" class="button" id="apply-date-range" style="background: #4f46e5; margin-top: 24px;">
+              Apply Range
+            </button>
+            <button type="button" class="button" id="reset-date-range" style="background: #6b7280; margin-top: 24px;">
+              Reset
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="date-range-selector">
+        <div class="selector-card">
+          <label for="date-range-mode" class="selector-label">Chart Date Range</label>
+          <select id="date-range-mode" class="date-range-dropdown">
+            <option value="plan">📅 Plan</option>
+            <option value="custom">🎯 Custom</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="charts">
+        <div class="chart-card">
+          <h3>Weight</h3>
+          <canvas id="weight-chart"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Body Fat %</h3>
+          <canvas id="fat-chart"></canvas>
+        </div>
+      </section>
+
+      <section class="actions">
+        <span id="status" class="status">Loading data...</span>
+      </section>
+
+      <div id="settings-overlay" class="settings-overlay" style="display: none;"></div>
+      <section id="settings-panel" class="settings-panel">
+        <div class="settings-card">
+          <div class="settings-header">
+            <h2>Plan Settings</h2>
+            <button type="button" class="close-btn" id="close-settings-panel">×</button>
+          </div>
+          
+          <div class="settings-section">
+            <h3>Ultimate Goal</h3>
+            <div class="form-group">
+              <label>Current Weight (kg)</label>
+              <input type="number" id="current-weight" step="0.1" min="0" placeholder="Your current weight" />
+            </div>
+            <div class="form-group">
+              <label>Current Body Fat (%)</label>
+              <input type="number" id="current-fat" step="0.1" min="0" max="100" placeholder="Your current body fat %" />
+            </div>
+            <div class="form-group">
+              <label>Target Weight (kg)</label>
+              <input type="number" id="ultimate-weight" step="0.1" min="0" />
+            </div>
+            <div class="form-group">
+              <label>Target Body Fat (%)</label>
+              <input type="number" id="ultimate-fat" step="0.1" min="0" max="100" />
+            </div>
+            <div class="form-group">
+              <label>Target Date</label>
+              <input type="date" id="ultimate-date" />
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3>Bi-Weekly Goals</h3>
+            <div class="form-group">
+              <label>Goal Period Start Date</label>
+              <input type="date" id="goals-start-date" />
+            </div>
+            <div class="form-group">
+              <label>Goal Period End Date</label>
+              <input type="date" id="goals-end-date" />
+            </div>
+            <button type="button" class="button" id="generate-biweekly" style="background: #10b981; margin-top: 12px;">
+              Generate Bi-Weekly Milestones
+            </button>
+            <div id="weekly-goals-list" style="margin-top: 24px;"></div>
+            <button type="button" class="button" id="add-milestone" style="background: #10b981; margin-top: 12px;">
+              + Add Milestone
+            </button>
+          </div>
+
+          <div class="settings-actions">
+            <button type="button" class="button" id="save-goals" style="background: #4f46e5;">
+              Save Goals
+            </button>
+            <button type="button" class="button" id="cancel-settings" style="background: #6b7280;">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
