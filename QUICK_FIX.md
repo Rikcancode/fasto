@@ -6,12 +6,16 @@ Since pulling from GitHub Container Registry is failing due to certificate issue
 
 ### Step 1: SSH into your ZimaOS device
 
-### Step 2: Clone the repository
+### Step 2: Download the repository (ZIP method - no Git auth needed)
 ```bash
 cd ~/AppData
-git clone https://github.com/Rikcancode/fasto.git
+wget https://github.com/Rikcancode/fasto/archive/refs/heads/master.zip
+unzip master.zip
+mv fasto-master fasto
 cd fasto
 ```
+
+**Alternative**: Download manually from https://github.com/Rikcancode/fasto/archive/refs/heads/master.zip and extract it.
 
 ### Step 3: Build the Docker image
 ```bash
