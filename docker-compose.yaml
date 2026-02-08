@@ -2,9 +2,9 @@ version: '3.8'
 
 services:
   fasto:
-    # Use GitHub Container Registry image (automatically built by GitHub Actions)
-    # For local builds, use: image: fasto:latest
-    image: ghcr.io/rikcancode/fasto:latest
+    # Build locally on ZimaOS (avoids authentication issues)
+    build: .
+    image: fasto:latest
     container_name: fasto
     ports:
       - "3007:80"
