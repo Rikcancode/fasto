@@ -46,7 +46,7 @@ x-casaos:
   description:
     en_us: Fasto is a weight loss journey tracking dashboard with Withings integration. Track your weight and body fat percentage against bi-weekly milestones and ultimate goals with beautiful charts and visualizations.
   developer: Fasto
-  icon: https://raw.githubusercontent.com/yourusername/fasto/main/icon.png
+  icon: https://raw.githubusercontent.com/Rikcancode/fasto/master/public/icon.png
   tagline:
     en_us: Track your weight loss journey with milestones and goals
   thumbnail: https://raw.githubusercontent.com/Rikcancode/fasto/master/public/icon.png
