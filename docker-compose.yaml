@@ -1,7 +1,7 @@
 name: fasto
 services:
   fasto:
-    image: fasto:latest
+    image: ghcr.io/rikcancode/fasto:latest
     container_name: fasto
     ports:
       - mode: ingress
