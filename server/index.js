@@ -7,6 +7,7 @@ import {
   buildAuthUrl,
   exchangeCodeForToken,
   fetchMeasurements,
+  fetchUserInfo,
 } from "./withings.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -85,17 +86,28 @@ app.put("/api/goals", async (req, res) => {
   }
 });
 
+app.get("/api/user", async (req, res) => {
+  try {
+    const userInfo = await fetchUserInfo();
+    res.json({ user: userInfo });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 app.get("/api/dashboard", async (req, res) => {
   try {
-    const [goals, measurements] = await Promise.all([
+    const [goals, measurements, userInfo] = await Promise.all([
       readGoals(),
       fetchMeasurements(),
+      fetchUserInfo().catch(() => null), // Don't fail dashboard if user info fails
     ]);
     res.json({
       measurements,
       weeklyGoals: goals.weeklyGoals,
       ultimateGoal: goals.ultimateGoal,
       goalPeriod: goals.goalPeriod || null,
+      user: userInfo,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -184,8 +184,25 @@ async function fetchMeasurements() {
   return data;
 }
 
+async function fetchUserInfo() {
+  const accessToken = await getAccessToken();
+  const params = new URLSearchParams({
+    action: "getuserinfo",
+    access_token: accessToken,
+  });
+
+  const response = await fetch(`https://wbsapi.withings.net/user?${params.toString()}`);
+  const json = await response.json();
+  if (json.status !== 0) {
+    throw new Error(`Withings user info error: ${JSON.stringify(json)}`);
+  }
+
+  return json.body.users?.[0] || null;
+}
+
 export {
   buildAuthUrl,
   exchangeCodeForToken,
   fetchMeasurements,
+  fetchUserInfo,
 };

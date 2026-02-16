@@ -9,6 +9,8 @@ const settingsOverlay = document.getElementById("settings-overlay");
 const statusIcon = document.getElementById("status-icon");
 const statusText = document.getElementById("status-text");
 const navStatus = document.querySelector(".nav-status");
+const navUser = document.getElementById("nav-user");
+const userName = document.getElementById("user-name");
 const menuToggle = document.getElementById("menu-toggle");
 const sidebar = document.querySelector(".sidebar");
 const sidebarOverlay = document.getElementById("sidebar-overlay");
@@ -538,6 +540,32 @@ function updateConnectionStatus(connected) {
   }
 }
 
+function updateUserInfo(user) {
+  const navConnectWithings = document.getElementById("nav-connect-withings");
+  
+  if (user && navUser && userName) {
+    // Withings API returns user info with firstname and lastname
+    const displayName = user.firstname && user.lastname 
+      ? `${user.firstname} ${user.lastname}`.trim()
+      : user.firstname || user.lastname || user.shortname || "User";
+    
+    userName.textContent = displayName;
+    navUser.style.display = "flex";
+    
+    // Hide "Connect Withings" when user is connected
+    if (navConnectWithings) {
+      navConnectWithings.style.display = "none";
+    }
+  } else if (navUser) {
+    navUser.style.display = "none";
+    
+    // Show "Connect Withings" when user is not connected
+    if (navConnectWithings) {
+      navConnectWithings.style.display = "flex";
+    }
+  }
+}
+
 async function loadAuthUrl() {
   try {
     const response = await fetch("/api/withings/auth-url");
@@ -572,6 +600,9 @@ async function loadDashboard() {
     
     // Update connection status
     updateConnectionStatus(true);
+    
+    // Update user info
+    updateUserInfo(json.user);
 
     statusEl.textContent = `Updated ${json.measurements.fetchedAt || 'just now'} - Data from Withings API`;
   } catch (error) {
