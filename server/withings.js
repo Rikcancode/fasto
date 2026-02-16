@@ -185,19 +185,30 @@ async function fetchMeasurements() {
 }
 
 async function fetchUserInfo() {
-  const accessToken = await getAccessToken();
-  const params = new URLSearchParams({
-    action: "getuserinfo",
-    access_token: accessToken,
-  });
+  try {
+    const accessToken = await getAccessToken();
+    // Try getuserslist endpoint (more commonly available)
+    const params = new URLSearchParams({
+      action: "getuserslist",
+      access_token: accessToken,
+    });
 
-  const response = await fetch(`https://wbsapi.withings.net/user?${params.toString()}`);
-  const json = await response.json();
-  if (json.status !== 0) {
-    throw new Error(`Withings user info error: ${JSON.stringify(json)}`);
+    const response = await fetch(`https://wbsapi.withings.net/user?${params.toString()}`);
+    const json = await response.json();
+    
+    if (json.status !== 0) {
+      // If getuserslist fails, try getdeviceinfo which might have user info
+      // Or return null to gracefully handle missing user info
+      console.warn("Withings user info not available:", json);
+      return null;
+    }
+
+    return json.body.users?.[0] || null;
+  } catch (error) {
+    // Gracefully handle errors - user info is optional
+    console.warn("Failed to fetch user info:", error);
+    return null;
   }
-
-  return json.body.users?.[0] || null;
 }
 
 export {

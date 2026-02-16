@@ -97,11 +97,20 @@ app.get("/api/user", async (req, res) => {
 
 app.get("/api/dashboard", async (req, res) => {
   try {
-    const [goals, measurements, userInfo] = await Promise.all([
+    const [goals, measurements] = await Promise.all([
       readGoals(),
       fetchMeasurements(),
-      fetchUserInfo().catch(() => null), // Don't fail dashboard if user info fails
     ]);
+    
+    // Try to get user info, but don't fail if it's not available
+    let userInfo = null;
+    try {
+      userInfo = await fetchUserInfo();
+    } catch (error) {
+      console.warn("User info not available:", error.message);
+      // Continue without user info - it's optional
+    }
+    
     res.json({
       measurements,
       weeklyGoals: goals.weeklyGoals,
