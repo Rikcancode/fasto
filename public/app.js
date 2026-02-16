@@ -573,10 +573,20 @@ async function loadAuthUrl() {
     if (json.url) {
       authLinkEl.href = json.url;
       updateConnectionStatus(false);
+      // Ensure Connect button is visible when not connected
+      const navConnectWithings = document.getElementById("nav-connect-withings");
+      if (navConnectWithings) {
+        navConnectWithings.style.display = "flex";
+      }
     }
   } catch (error) {
     console.warn("Unable to load Withings auth url", error);
     updateConnectionStatus(false);
+    // Ensure Connect button is visible on error
+    const navConnectWithings = document.getElementById("nav-connect-withings");
+    if (navConnectWithings) {
+      navConnectWithings.style.display = "flex";
+    }
   }
 }
 
