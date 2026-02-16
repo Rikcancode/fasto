@@ -543,11 +543,15 @@ function updateConnectionStatus(connected) {
 function updateUserInfo(user) {
   const navConnectWithings = document.getElementById("nav-connect-withings");
   
+  console.log("updateUserInfo called with:", user);
+  console.log("navUser element:", navUser);
+  console.log("userName element:", userName);
+  
   if (user && navUser && userName) {
     // Withings API returns user info with firstname and lastname
     const displayName = user.firstname && user.lastname 
       ? `${user.firstname} ${user.lastname}`.trim()
-      : user.firstname || user.lastname || user.shortname || "User";
+      : user.firstname || user.lastname || user.shortname || user.email || "User";
     
     userName.textContent = displayName;
     navUser.style.display = "flex";
@@ -556,8 +560,11 @@ function updateUserInfo(user) {
     if (navConnectWithings) {
       navConnectWithings.style.display = "none";
     }
-  } else if (navUser) {
-    navUser.style.display = "none";
+  } else {
+    // Hide username display
+    if (navUser) {
+      navUser.style.display = "none";
+    }
     
     // Show "Connect Withings" when user is not connected
     if (navConnectWithings) {
@@ -613,6 +620,9 @@ async function loadDashboard() {
     
     // Update user info
     updateUserInfo(json.user);
+    
+    // Debug: log user info
+    console.log("User info from API:", json.user);
 
     statusEl.textContent = `Updated ${json.measurements.fetchedAt || 'just now'} - Data from Withings API`;
   } catch (error) {
