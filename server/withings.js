@@ -45,7 +45,7 @@ function buildAuthUrl() {
     response_type: "code",
     client_id: clientId,
     redirect_uri: redirectUri,
-    scope: "user.metrics",
+    scope: "user.metrics,user.info",
     state: "withings-dashboard",
   });
   return `https://account.withings.com/oauth2_user/authorize2?${params.toString()}`;
@@ -187,7 +187,8 @@ async function fetchMeasurements() {
 async function fetchUserInfo() {
   try {
     const accessToken = await getAccessToken();
-    // Try getuserslist endpoint (more commonly available)
+    
+    // Try getuserslist endpoint
     const params = new URLSearchParams({
       action: "getuserslist",
       access_token: accessToken,
@@ -196,17 +197,17 @@ async function fetchUserInfo() {
     const response = await fetch(`https://wbsapi.withings.net/user?${params.toString()}`);
     const json = await response.json();
     
-    if (json.status !== 0) {
-      // If getuserslist fails, try getdeviceinfo which might have user info
-      // Or return null to gracefully handle missing user info
-      console.warn("Withings user info not available:", json);
-      return null;
+    if (json.status === 0 && json.body?.users?.length > 0) {
+      return json.body.users[0];
     }
-
-    return json.body.users?.[0] || null;
+    
+    // If that fails, user info API is not available with current scope
+    // Return null gracefully - username display is optional
+    console.warn("Withings user info not available (API may not support it):", json.status);
+    return null;
   } catch (error) {
     // Gracefully handle errors - user info is optional
-    console.warn("Failed to fetch user info:", error);
+    console.warn("Failed to fetch user info:", error.message);
     return null;
   }
 }
