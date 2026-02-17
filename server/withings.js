@@ -186,30 +186,30 @@ async function fetchMeasurements() {
 
 async function fetchUserInfo() {
   try {
-    const accessToken = await getAccessToken();
-    
-    // Try getuserslist endpoint
-    const params = new URLSearchParams({
-      action: "getuserslist",
-      access_token: accessToken,
-    });
-
-    const response = await fetch(`https://wbsapi.withings.net/user?${params.toString()}`);
-    const json = await response.json();
-    
-    if (json.status === 0 && json.body?.users?.length > 0) {
-      return json.body.users[0];
+    // Withings API doesn't provide user info endpoint for standard OAuth2
+    // Try to read from stored user info file (set via API)
+    const userInfoPath = path.join(__dirname, "..", "data", "user_info.json");
+    try {
+      const raw = await fs.readFile(userInfoPath, "utf-8");
+      const userInfo = JSON.parse(raw);
+      return userInfo;
+    } catch (error) {
+      if (error.code === "ENOENT") {
+        // File doesn't exist - user hasn't set their name yet
+        return null;
+      }
+      throw error;
     }
-    
-    // If that fails, user info API is not available with current scope
-    // Return null gracefully - username display is optional
-    console.warn("Withings user info not available (API may not support it):", json.status);
-    return null;
   } catch (error) {
-    // Gracefully handle errors - user info is optional
     console.warn("Failed to fetch user info:", error.message);
     return null;
   }
+}
+
+async function saveUserInfo(userInfo) {
+  const userInfoPath = path.join(__dirname, "..", "data", "user_info.json");
+  await fs.mkdir(path.dirname(userInfoPath), { recursive: true });
+  await fs.writeFile(userInfoPath, JSON.stringify(userInfo, null, 2), "utf-8");
 }
 
 export {
@@ -217,4 +217,5 @@ export {
   exchangeCodeForToken,
   fetchMeasurements,
   fetchUserInfo,
+  saveUserInfo,
 };

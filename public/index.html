@@ -41,6 +41,10 @@
           <span class="nav-icon">👤</span>
           <span>Change Account</span>
         </a></li>
+        <li><a href="#" id="nav-set-username" class="nav-item" style="display: none;">
+          <span class="nav-icon">✏️</span>
+          <span>Set Username</span>
+        </a></li>
       </ul>
     </nav>
     <div id="sidebar-overlay" class="sidebar-overlay" style="display: none;"></div>
@@ -151,6 +155,29 @@
       </section>
 
       <div id="settings-overlay" class="settings-overlay" style="display: none;"></div>
+      <div id="username-overlay" class="settings-overlay" style="display: none;"></div>
+      <section id="username-panel" class="settings-panel">
+        <div class="settings-card">
+          <div class="settings-header">
+            <h2>Set Username</h2>
+            <button type="button" class="close-btn" id="close-username-panel">×</button>
+          </div>
+          <div class="settings-section">
+            <div class="form-group">
+              <label>Your Name</label>
+              <input type="text" id="username-input" placeholder="Enter your name" />
+            </div>
+          </div>
+          <div class="settings-actions">
+            <button type="button" class="button" id="save-username" style="background: #4f46e5;">
+              Save
+            </button>
+            <button type="button" class="button" id="cancel-username" style="background: #6b7280;">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </section>
       <section id="settings-panel" class="settings-panel">
         <div class="settings-card">
           <div class="settings-header">

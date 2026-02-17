@@ -8,6 +8,7 @@ import {
   exchangeCodeForToken,
   fetchMeasurements,
   fetchUserInfo,
+  saveUserInfo,
 } from "./withings.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -90,6 +91,22 @@ app.get("/api/user", async (req, res) => {
   try {
     const userInfo = await fetchUserInfo();
     res.json({ user: userInfo });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.put("/api/user", async (req, res) => {
+  try {
+    const { name } = req.body;
+    if (!name || typeof name !== "string") {
+      res.status(400).json({ error: "Name is required" });
+      return;
+    }
+    
+    const userInfo = { name: name.trim() };
+    await saveUserInfo(userInfo);
+    res.json({ success: true, user: userInfo });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -3,6 +3,7 @@ const authLinkEl = document.getElementById("withings-auth");
 const navConnectWithings = document.getElementById("nav-connect-withings");
 const navPlanSettings = document.getElementById("nav-plan-settings");
 const navChangeAccount = document.getElementById("nav-change-account");
+const navSetUsername = document.getElementById("nav-set-username");
 const dateRangeMode = document.getElementById("date-range-mode");
 const dateRangeSection = document.getElementById("date-range-section");
 const settingsOverlay = document.getElementById("settings-overlay");
@@ -543,27 +544,31 @@ function updateConnectionStatus(connected) {
 function updateUserInfo(user) {
   const navConnectWithings = document.getElementById("nav-connect-withings");
   
-  console.log("updateUserInfo called with:", user);
-  console.log("navUser element:", navUser);
-  console.log("userName element:", userName);
-  
-  if (user && navUser && userName) {
-    // Withings API returns user info with firstname and lastname
-    const displayName = user.firstname && user.lastname 
-      ? `${user.firstname} ${user.lastname}`.trim()
-      : user.firstname || user.lastname || user.shortname || user.email || "User";
-    
-    userName.textContent = displayName;
+  if (user && user.name && navUser && userName) {
+    // Display stored username
+    userName.textContent = user.name;
     navUser.style.display = "flex";
+    
+    // Show "Set Username" option when connected
+    if (navSetUsername) {
+      navSetUsername.style.display = "flex";
+    }
     
     // Hide "Connect Withings" when user is connected
     if (navConnectWithings) {
       navConnectWithings.style.display = "none";
     }
   } else {
-    // Hide username display
+    // Hide username display if not set
     if (navUser) {
       navUser.style.display = "none";
+    }
+    
+    // Show "Set Username" option when connected (even if name not set)
+    if (navSetUsername && dashboardData && !dashboardData.error) {
+      navSetUsername.style.display = "flex";
+    } else if (navSetUsername) {
+      navSetUsername.style.display = "none";
     }
     
     // Show "Connect Withings" when user is not connected
@@ -1126,6 +1131,68 @@ dateRangeMode.addEventListener("change", (e) => {
     if (dashboardData) {
       updateDateRangeInputs(dashboardData.goalPeriod, dashboardData.ultimateGoal);
     }
+  }
+});
+
+// Username panel handlers
+const usernameOverlay = document.getElementById("username-overlay");
+const usernamePanel = document.getElementById("username-panel");
+const closeUsernamePanel = document.getElementById("close-username-panel");
+const cancelUsername = document.getElementById("cancel-username");
+const saveUsername = document.getElementById("save-username");
+const usernameInput = document.getElementById("username-input");
+
+function openUsernamePanel() {
+  usernamePanel.classList.add("open");
+  usernameOverlay.style.display = "block";
+  if (userName && userName.textContent !== "--") {
+    usernameInput.value = userName.textContent;
+  }
+}
+
+function closeUsernamePanelFunc() {
+  usernamePanel.classList.remove("open");
+  usernameOverlay.style.display = "none";
+}
+
+navSetUsername?.addEventListener("click", (e) => {
+  e.preventDefault();
+  handleNavClick(e);
+  openUsernamePanel();
+});
+
+usernameOverlay?.addEventListener("click", closeUsernamePanelFunc);
+closeUsernamePanel?.addEventListener("click", closeUsernamePanelFunc);
+cancelUsername?.addEventListener("click", closeUsernamePanelFunc);
+
+saveUsername?.addEventListener("click", async () => {
+  const name = usernameInput.value.trim();
+  if (!name) {
+    alert("Please enter a name");
+    return;
+  }
+  
+  try {
+    const response = await fetch("/api/user", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name }),
+    });
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Failed to save username");
+    }
+    
+    const result = await response.json();
+    updateUserInfo(result.user);
+    closeUsernamePanelFunc();
+    statusEl.textContent = "Username saved successfully!";
+  } catch (error) {
+    statusEl.textContent = `Error saving username: ${error.message}`;
+    console.error("Failed to save username:", error);
   }
 });
 
