@@ -13,6 +13,8 @@ services:
       - NODE_ENV=production
       - WITHINGS_CLIENT_ID=${WITHINGS_CLIENT_ID}
       - WITHINGS_CLIENT_SECRET=${WITHINGS_CLIENT_SECRET}
+      - FASTO_USER=${FASTO_USER:-fasto}
+      - FASTO_PASSWORD=${FASTO_PASSWORD:-}
       - WITHINGS_REDIRECT_URI=${WITHINGS_REDIRECT_URI:-http://192.168.68.74:3007/api/withings/callback}
     volumes:
       - type: bind
@@ -22,7 +24,7 @@ services:
           create_host_path: true
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost/api/goals', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost/healthz', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
       interval: 30s
       timeout: 3s
       retries: 3

@@ -25,6 +25,8 @@ WITHINGS_CLIENT_SECRET=your_client_secret
 WITHINGS_REDIRECT_URI=http://localhost/api/withings/callback
 PORT=80
 HOST=0.0.0.0
+FASTO_USER=fasto
+FASTO_PASSWORD=choose_a_strong_password
 ```
 
 **Note**: You can also reference `config.yaml` or `app-config.yaml` for configuration structure, but sensitive credentials must be in `.env` file.
@@ -47,6 +49,17 @@ bash run-dev.sh
 The scripts automatically use the bundled Node.js if `node-v24.13.0-linux-x64/` exists in the project folder, otherwise they use system Node.js.
 
 Open `http://localhost` (or `http://localhost:3001` if using port 3001 for testing) in your browser. Click **Connect Withings** and complete OAuth. The token is stored in `data/withings_token.json`.
+
+## Access Protection
+
+The dashboard and every `/api/*` route are behind HTTP Basic Auth once `FASTO_PASSWORD` is set (`FASTO_USER` defaults to `fasto`). The browser prompts once and remembers the login; scripts pass it the usual way:
+
+```bash
+curl -u fasto:yourpassword -X PUT http://your-host:3007/api/goals \
+  -H 'Content-Type: application/json' --data @data/goals.json
+```
+
+Ten wrong passwords from one IP within 15 minutes blocks that IP for the rest of the window. `/healthz` and the Withings OAuth callback stay open. If `FASTO_PASSWORD` is empty the app runs unprotected and logs a warning at startup.
 
 ## Configuration Files
 

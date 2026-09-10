@@ -10,6 +10,7 @@ import {
   fetchUserInfo,
   saveUserInfo,
 } from "./withings.js";
+import { basicAuth, authConfig } from "./auth.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,6 +19,15 @@ const app = express();
 const PORT = process.env.PORT || 80;
 const GOALS_PATH = path.join(__dirname, "..", "data", "goals.json");
 
+// Trust the first proxy hop so throttling sees real client IPs behind a reverse proxy.
+app.set("trust proxy", 1);
+
+// Unauthenticated health check for Docker/ZimaOS.
+app.get("/healthz", (req, res) => {
+  res.json({ status: "ok", auth: authConfig().enabled });
+});
+
+app.use(basicAuth());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "..", "public")));
 
@@ -142,5 +152,7 @@ app.get("/api/dashboard", async (req, res) => {
 
 const HOST = process.env.HOST || "0.0.0.0";
 app.listen(PORT, HOST, () => {
+  const { enabled, user } = authConfig();
   console.log(`Withings dashboard running on http://${HOST}:${PORT}`);
+  console.log(enabled ? `Basic auth enabled (user: ${user})` : "Basic auth disabled");
 });
