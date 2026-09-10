@@ -20,11 +20,15 @@ const weightCurrentEl = document.getElementById("weight-current");
 const weightLastEl = document.getElementById("weight-last");
 const weightTargetEl = document.getElementById("weight-target");
 const weightNextMilestoneEl = document.getElementById("weight-next-milestone");
+const weightAvgEl = document.getElementById("weight-avg");
+const weightDeltaEl = document.getElementById("weight-delta");
 
 const fatCurrentEl = document.getElementById("fat-current");
 const fatLastEl = document.getElementById("fat-last");
 const fatTargetEl = document.getElementById("fat-target");
 const fatNextMilestoneEl = document.getElementById("fat-next-milestone");
+const fatAvgEl = document.getElementById("fat-avg");
+const fatDeltaEl = document.getElementById("fat-delta");
 
 let weightChart;
 let fatChart;
@@ -61,6 +65,75 @@ function findCurrentWeekGoal(weeklyGoals) {
 function latestValue(series) {
   if (!Array.isArray(series) || series.length === 0) return null;
   return series[series.length - 1].value;
+}
+
+
+// Average of all measurements in the last `days` days (ending at the latest measurement).
+function rollingAverage(series, days = 7) {
+  if (!Array.isArray(series) || series.length === 0) return null;
+  const end = parseDate(series[series.length - 1].date);
+  const start = new Date(end.getTime() - (days - 1) * 86400000);
+  const values = series
+    .filter((p) => parseDate(p.date) >= start && parseDate(p.date) <= end)
+    .map((p) => p.value)
+    .filter((v) => typeof v === "number" && !Number.isNaN(v));
+  if (values.length === 0) return null;
+  return { value: values.reduce((a, b) => a + b, 0) / values.length, count: values.length, end };
+}
+
+// Value of the plan line on a given date: linear interpolation between the
+// milestones (and the ultimate goal). Before the first milestone the line is
+// anchored at the first measurement inside the goal period.
+function planValueOn(date, weeklyGoals, ultimateGoal, goalPeriod, series, field) {
+  const points = [];
+  if (Array.isArray(weeklyGoals)) {
+    for (const g of weeklyGoals) {
+      if (typeof g[field] === "number") points.push({ t: parseDate(g.weekStart).getTime(), v: g[field] });
+    }
+  }
+  if (ultimateGoal?.targetDate && typeof ultimateGoal[field] === "number") {
+    points.push({ t: parseDate(ultimateGoal.targetDate).getTime(), v: ultimateGoal[field] });
+  }
+  if (goalPeriod?.startDate && Array.isArray(series)) {
+    const startT = parseDate(goalPeriod.startDate).getTime();
+    const anchor = series.find((p) => parseDate(p.date).getTime() >= startT);
+    if (anchor) points.push({ t: startT, v: anchor.value });
+  }
+  if (points.length < 2) return null;
+  points.sort((a, b) => a.t - b.t);
+  const t = date.getTime();
+  if (t < points[0].t || t > points[points.length - 1].t) return null;
+  for (let i = 1; i < points.length; i += 1) {
+    if (t <= points[i].t) {
+      const a = points[i - 1];
+      const b = points[i];
+      if (b.t === a.t) return b.v;
+      return a.v + ((b.v - a.v) * (t - a.t)) / (b.t - a.t);
+    }
+  }
+  return null;
+}
+
+function renderPlanDelta(el, avg, plan, unit) {
+  el.classList.remove("ahead", "behind", "on-track");
+  el.removeAttribute("data-date");
+  if (avg === null || plan === null) {
+    el.textContent = "--";
+    return;
+  }
+  const diff = avg - plan; // negative = below the line = ahead for weight and body fat
+  const abs = Math.abs(diff);
+  if (abs < 0.15) {
+    el.textContent = "On plan";
+    el.classList.add("on-track");
+  } else if (diff < 0) {
+    el.textContent = `${formatNumber(abs)} ${unit} ahead`;
+    el.classList.add("ahead");
+  } else {
+    el.textContent = `${formatNumber(abs)} ${unit} behind`;
+    el.classList.add("behind");
+  }
+  el.setAttribute("data-date", `plan: ${formatNumber(plan)} ${unit}`);
 }
 
 function buildGoalSeries(weeklyGoals, field) {
@@ -468,9 +541,21 @@ function calculateWeeksUntil(targetDate) {
   return diffWeeks > 0 ? diffWeeks : 0;
 }
 
-function updateSummary(measurements, weeklyGoals, ultimateGoal) {
+function updateSummary(measurements, weeklyGoals, ultimateGoal, goalPeriod) {
   const lastWeight = latestValue(measurements.weight);
   const lastFat = latestValue(measurements.bodyFat);
+
+  // 7-day averages and position against the plan line
+  const weightAvg = rollingAverage(measurements.weight);
+  const fatAvg = rollingAverage(measurements.bodyFat);
+  weightAvgEl.textContent = weightAvg ? `${formatNumber(weightAvg.value)} kg` : "--";
+  weightAvgEl.setAttribute("data-date", weightAvg ? `${weightAvg.count} readings` : "");
+  fatAvgEl.textContent = fatAvg ? `${formatNumber(fatAvg.value)} %` : "--";
+  fatAvgEl.setAttribute("data-date", fatAvg ? `${fatAvg.count} readings` : "");
+  const weightPlan = weightAvg ? planValueOn(weightAvg.end, weeklyGoals, ultimateGoal, goalPeriod, measurements.weight, "weightKg") : null;
+  const fatPlan = fatAvg ? planValueOn(fatAvg.end, weeklyGoals, ultimateGoal, goalPeriod, measurements.bodyFat, "bodyFatPct") : null;
+  renderPlanDelta(weightDeltaEl, weightAvg ? weightAvg.value : null, weightPlan, "kg");
+  renderPlanDelta(fatDeltaEl, fatAvg ? fatAvg.value : null, fatPlan, "%");
   
   // Weight summary
   weightLastEl.textContent = lastWeight ? `${formatNumber(lastWeight)} kg` : "--";
@@ -614,7 +699,7 @@ async function loadDashboard() {
     }
 
     dashboardData = json; // Store for re-rendering
-    updateSummary(json.measurements, json.weeklyGoals, json.ultimateGoal);
+    updateSummary(json.measurements, json.weeklyGoals, json.ultimateGoal, json.goalPeriod);
     renderCharts(json);
     
     // Update date range inputs with current range

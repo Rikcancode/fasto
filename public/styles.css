@@ -245,8 +245,20 @@ body {
 
 .metrics-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 20px;
+}
+
+.plan-delta.ahead {
+  color: #22c55e;
+}
+
+.plan-delta.behind {
+  color: #f59e0b;
+}
+
+.plan-delta.on-track {
+  color: #94a3b8;
 }
 
 .metric-item {
