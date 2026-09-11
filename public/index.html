@@ -37,6 +37,14 @@
           <span class="nav-icon">⚙️</span>
           <span>Plan Settings</span>
         </a></li>
+        <li><a href="#exercise-plan-card" id="nav-exercise-plan" class="nav-item">
+          <span class="nav-icon">🏋️</span>
+          <span>Exercise Plan</span>
+        </a></li>
+        <li><a href="#diet-plan-card" id="nav-diet-plan" class="nav-item">
+          <span class="nav-icon">🥗</span>
+          <span>Diet Plan</span>
+        </a></li>
         <li><a href="#" id="nav-change-account" class="nav-item">
           <span class="nav-icon">👤</span>
           <span>Change Account</span>
@@ -166,8 +174,109 @@
         </div>
       </section>
 
+      <section class="plans">
+        <div class="card plan-card" id="exercise-plan-card">
+          <div class="card-header plan-card-header">
+            <span class="plan-emoji">🏋️</span>
+            <h2>Exercise Plan</h2>
+            <button type="button" class="button button-small plan-edit-btn" id="edit-exercise-plan">Edit</button>
+          </div>
+          <div id="exercise-plan-view" class="plan-view">
+            <p class="plan-empty">Loading plan...</p>
+          </div>
+        </div>
+        <div class="card plan-card" id="diet-plan-card">
+          <div class="card-header plan-card-header">
+            <span class="plan-emoji">🥗</span>
+            <h2>Diet Plan</h2>
+            <button type="button" class="button button-small plan-edit-btn" id="edit-diet-plan">Edit</button>
+          </div>
+          <div id="diet-plan-view" class="plan-view">
+            <p class="plan-empty">Loading plan...</p>
+          </div>
+        </div>
+      </section>
+
       <section class="actions">
         <span id="status" class="status">Loading data...</span>
+      </section>
+
+      <div id="plans-overlay" class="settings-overlay" style="display: none;"></div>
+      <section id="exercise-panel" class="settings-panel">
+        <div class="settings-card">
+          <div class="settings-header">
+            <h2>Edit Exercise Plan</h2>
+            <button type="button" class="close-btn" id="close-exercise-panel">×</button>
+          </div>
+          <div class="settings-section">
+            <div class="form-group">
+              <label>Notes</label>
+              <textarea id="exercise-notes" rows="3" placeholder="General notes for the week"></textarea>
+            </div>
+          </div>
+          <div class="settings-section">
+            <h3>Weekly Schedule</h3>
+            <div id="exercise-days-list"></div>
+            <button type="button" class="button" id="add-exercise-day" style="background: #10b981; margin-top: 12px;">
+              + Add Day
+            </button>
+          </div>
+          <div class="settings-actions">
+            <button type="button" class="button" id="save-exercise-plan" style="background: #4f46e5;">Save Plan</button>
+            <button type="button" class="button" id="cancel-exercise-plan" style="background: #6b7280;">Cancel</button>
+          </div>
+        </div>
+      </section>
+      <section id="diet-panel" class="settings-panel">
+        <div class="settings-card">
+          <div class="settings-header">
+            <h2>Edit Diet Plan</h2>
+            <button type="button" class="close-btn" id="close-diet-panel">×</button>
+          </div>
+          <div class="settings-section">
+            <h3>Daily Targets</h3>
+            <div class="targets-row">
+              <div class="form-group">
+                <label>Calories (kcal)</label>
+                <input type="number" id="diet-calories" min="0" step="10" />
+              </div>
+              <div class="form-group">
+                <label>Protein (g)</label>
+                <input type="number" id="diet-protein" min="0" step="5" />
+              </div>
+              <div class="form-group">
+                <label>Carbs (g)</label>
+                <input type="number" id="diet-carbs" min="0" step="5" />
+              </div>
+              <div class="form-group">
+                <label>Fat (g)</label>
+                <input type="number" id="diet-fat" min="0" step="5" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Notes</label>
+              <textarea id="diet-notes" rows="3" placeholder="General notes"></textarea>
+            </div>
+          </div>
+          <div class="settings-section">
+            <h3>Meals</h3>
+            <div id="diet-meals-list"></div>
+            <button type="button" class="button" id="add-diet-meal" style="background: #10b981; margin-top: 12px;">
+              + Add Meal
+            </button>
+          </div>
+          <div class="settings-section">
+            <h3>Guidelines</h3>
+            <div class="form-group">
+              <label>One guideline per line</label>
+              <textarea id="diet-guidelines" rows="6"></textarea>
+            </div>
+          </div>
+          <div class="settings-actions">
+            <button type="button" class="button" id="save-diet-plan" style="background: #4f46e5;">Save Plan</button>
+            <button type="button" class="button" id="cancel-diet-plan" style="background: #6b7280;">Cancel</button>
+          </div>
+        </div>
       </section>
 
       <div id="settings-overlay" class="settings-overlay" style="display: none;"></div>
@@ -257,5 +366,6 @@
     </main>
 
     <script src="/app.js"></script>
+    <script src="/plans.js"></script>
   </body>
 </html>

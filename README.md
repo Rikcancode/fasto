@@ -35,6 +35,8 @@ FASTO_PASSWORD=choose_a_strong_password
 
 3. Update goals in `data/goals.json`.
 
+4. Optional: edit `data/plans.json` to change the exercise and diet plans, or do it from the app (see below).
+
 ## Run
 
 ```bash
@@ -49,6 +51,12 @@ bash run-dev.sh
 The scripts automatically use the bundled Node.js if `node-v24.13.0-linux-x64/` exists in the project folder, otherwise they use system Node.js.
 
 Open `http://localhost` (or `http://localhost:3001` if using port 3001 for testing) in your browser. Click **Connect Withings** and complete OAuth. The token is stored in `data/withings_token.json`.
+
+## Exercise and Diet Plans
+
+The dashboard shows a weekly **Exercise Plan** (one block per weekday, today highlighted) and a **Diet Plan** (daily calorie and macro targets, meals, guidelines). Click **Edit** on either card, or use the sidebar links, to change them in the app. Plans are stored in `data/plans.json` and served by `GET /api/plans` / `PUT /api/plans`. If the file is missing (for example on a fresh Docker volume) the app shows a starter template until you save your own.
+
+The starter plans are a generic template, not medical or dietary advice. Adjust them to your own needs.
 
 ## Access Protection
 

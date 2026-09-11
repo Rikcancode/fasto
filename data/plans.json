@@ -1,0 +1,208 @@
+{
+  "exercisePlan": {
+    "notes": "Starter template: 3 strength days, 2 cardio days, 1 active recovery day. Add load when you reach the top of a rep range. Aim for 8,000+ steps every day.",
+    "days": [
+      {
+        "day": "Monday",
+        "focus": "Lower body strength",
+        "exercises": [
+          {
+            "name": "Goblet squat",
+            "sets": 3,
+            "reps": "10-12",
+            "notes": ""
+          },
+          {
+            "name": "Romanian deadlift",
+            "sets": 3,
+            "reps": "10",
+            "notes": "Dumbbells or barbell"
+          },
+          {
+            "name": "Walking lunges",
+            "sets": 3,
+            "reps": "10 per leg",
+            "notes": ""
+          },
+          {
+            "name": "Plank",
+            "sets": 3,
+            "reps": "40 s",
+            "notes": ""
+          }
+        ]
+      },
+      {
+        "day": "Tuesday",
+        "focus": "Zone 2 cardio",
+        "exercises": [
+          {
+            "name": "Brisk walk, cycle or swim",
+            "sets": 1,
+            "reps": "40 min",
+            "notes": "Conversational pace"
+          }
+        ]
+      },
+      {
+        "day": "Wednesday",
+        "focus": "Upper body strength",
+        "exercises": [
+          {
+            "name": "Push-ups or dumbbell bench press",
+            "sets": 3,
+            "reps": "8-12",
+            "notes": ""
+          },
+          {
+            "name": "One-arm dumbbell row",
+            "sets": 3,
+            "reps": "10 per side",
+            "notes": ""
+          },
+          {
+            "name": "Overhead press",
+            "sets": 3,
+            "reps": "8-10",
+            "notes": ""
+          },
+          {
+            "name": "Dead bug",
+            "sets": 3,
+            "reps": "10 per side",
+            "notes": ""
+          }
+        ]
+      },
+      {
+        "day": "Thursday",
+        "focus": "Active recovery",
+        "exercises": [
+          {
+            "name": "Easy walk",
+            "sets": 1,
+            "reps": "30-45 min",
+            "notes": ""
+          },
+          {
+            "name": "Mobility routine",
+            "sets": 1,
+            "reps": "10 min",
+            "notes": "Hips, shoulders, thoracic spine"
+          }
+        ]
+      },
+      {
+        "day": "Friday",
+        "focus": "Full body strength",
+        "exercises": [
+          {
+            "name": "Deadlift or trap bar deadlift",
+            "sets": 3,
+            "reps": "6-8",
+            "notes": ""
+          },
+          {
+            "name": "Incline dumbbell press",
+            "sets": 3,
+            "reps": "10",
+            "notes": ""
+          },
+          {
+            "name": "Lat pulldown or pull-ups",
+            "sets": 3,
+            "reps": "8-10",
+            "notes": ""
+          },
+          {
+            "name": "Farmer's carry",
+            "sets": 3,
+            "reps": "30 m",
+            "notes": "Heavy"
+          }
+        ]
+      },
+      {
+        "day": "Saturday",
+        "focus": "Cardio intervals",
+        "exercises": [
+          {
+            "name": "Warm-up",
+            "sets": 1,
+            "reps": "5 min",
+            "notes": ""
+          },
+          {
+            "name": "Intervals",
+            "sets": 8,
+            "reps": "1 min hard / 2 min easy",
+            "notes": "Bike, rower or run"
+          },
+          {
+            "name": "Cool-down",
+            "sets": 1,
+            "reps": "5 min",
+            "notes": ""
+          }
+        ]
+      },
+      {
+        "day": "Sunday",
+        "focus": "Rest",
+        "exercises": []
+      }
+    ]
+  },
+  "dietPlan": {
+    "caloriesKcal": 1900,
+    "proteinG": 160,
+    "carbsG": 170,
+    "fatG": 60,
+    "notes": "Starter template for a moderate deficit with high protein. Adjust portions if the 7-day average stops moving for two weeks.",
+    "meals": [
+      {
+        "name": "Breakfast",
+        "time": "07:30",
+        "items": [
+          "250 g Greek yogurt (0-2% fat)",
+          "30 g oats",
+          "Handful of berries",
+          "Coffee or tea, no sugar"
+        ]
+      },
+      {
+        "name": "Lunch",
+        "time": "12:30",
+        "items": [
+          "150 g chicken, fish or lean beef",
+          "150 g cooked rice or potatoes",
+          "Large salad with 1 tbsp olive oil"
+        ]
+      },
+      {
+        "name": "Snack",
+        "time": "16:00",
+        "items": [
+          "1 apple",
+          "30 g nuts or a protein shake"
+        ]
+      },
+      {
+        "name": "Dinner",
+        "time": "19:30",
+        "items": [
+          "150 g lean protein",
+          "Plenty of vegetables",
+          "100 g cooked pasta or 2 slices wholegrain bread"
+        ]
+      }
+    ],
+    "guidelines": [
+      "Protein at every meal",
+      "At least 2 L of water per day",
+      "Alcohol: max 2 drinks per week",
+      "Weigh in every morning after the bathroom, before breakfast",
+      "One planned free meal per week, no free days"
+    ]
+  }
+}

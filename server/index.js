@@ -11,6 +11,7 @@ import {
   saveUserInfo,
 } from "./withings.js";
 import { basicAuth, authConfig } from "./auth.js";
+import { readPlans, writePlans } from "./plans.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -95,6 +96,28 @@ app.put("/api/goals", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+});
+
+app.get("/api/plans", async (req, res) => {
+  try {
+    const plans = await readPlans();
+    res.json(plans);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.put("/api/plans", async (req, res) => {
+  let plans;
+  try {
+    plans = await writePlans(req.body);
+  } catch (error) {
+    // Validation errors come from normalizePlans; anything with a code is a filesystem error.
+    const status = error.code ? 500 : 400;
+    res.status(status).json({ error: error.message });
+    return;
+  }
+  res.json({ success: true, plans });
 });
 
 app.get("/api/user", async (req, res) => {
