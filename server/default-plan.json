@@ -1,0 +1,135 @@
+{
+  "title": "Cut to December",
+  "period": { "startDate": "2026-09-14", "endDate": "2026-12-31" },
+  "schedule": [
+    { "day": "Mon", "session": "Day 1 · Pull, heavy" },
+    { "day": "Tue", "session": "Day 2 · Legs + hinge" },
+    { "day": "Wed", "session": "Walk 35 min" },
+    { "day": "Thu", "session": "Day 3 · Upper, balanced" },
+    { "day": "Fri", "session": "Day 4 · Pull, volume" },
+    { "day": "Sat", "session": "Walk 35 min" },
+    { "day": "Sun", "session": "Off" }
+  ],
+  "warmup": {
+    "duration": "8 min",
+    "items": [
+      "Wall slides 2×10 — back, glutes, elbows and wrists on the wall, no low-back arch",
+      "Foam-roller thoracic extensions ×10",
+      "Dead hangs 2×30–45 s",
+      "Band pull-aparts 2×20"
+    ]
+  },
+  "days": [
+    {
+      "name": "Day 1 · Pull, heavy",
+      "duration": "~50 min",
+      "exercises": [
+        { "name": "Chin-ups (weighted or assisted)", "sets": "4×5–8", "rest": "2 min" },
+        { "name": "Chest-supported DB row", "sets": "4×8–10", "rest": "90 s" },
+        { "name": "Face pulls, pause at the back", "sets": "3×15–20", "rest": "60 s" },
+        { "name": "Single-arm cable row, 3 s lowering", "sets": "3×12 / side", "rest": "60 s" },
+        { "name": "Wrist curls", "sets": "3×15–20", "rest": "45 s" },
+        { "name": "Reverse wrist curls", "sets": "3×15–20", "rest": "45 s" }
+      ]
+    },
+    {
+      "name": "Day 2 · Legs + hinge",
+      "duration": "~45 min",
+      "exercises": [
+        { "name": "Romanian deadlift", "sets": "4×8", "rest": "2.5 min" },
+        { "name": "Front or goblet squat", "sets": "3×8–10", "rest": "2 min" },
+        { "name": "Hip thrust or back extension", "sets": "3×12", "rest": "90 s" },
+        { "name": "Farmer's carries", "sets": "3×40 m", "rest": "90 s" }
+      ]
+    },
+    {
+      "name": "Day 3 · Upper, balanced",
+      "duration": "~50 min",
+      "exercises": [
+        { "name": "Landmine or half-kneeling single-arm press", "sets": "3×8–10 / side", "rest": "90 s" },
+        { "name": "Incline DB press", "sets": "3×10", "rest": "90 s" },
+        { "name": "Lat pulldown", "sets": "4×10–12", "rest": "90 s" },
+        { "name": "Y-raises on incline bench, light", "sets": "3×12", "rest": "60 s" },
+        { "name": "Hammer curls", "sets": "3×10–12", "rest": "60 s" },
+        { "name": "Reverse-grip barbell curls", "sets": "3×12", "rest": "60 s" }
+      ]
+    },
+    {
+      "name": "Day 4 · Pull, volume",
+      "duration": "~50 min",
+      "exercises": [
+        { "name": "Barbell / Pendlay row", "sets": "4×8", "rest": "2 min" },
+        { "name": "Straight-arm pulldown", "sets": "3×12", "rest": "60 s" },
+        { "name": "Seated cable row, wide neutral grip", "sets": "3×12", "rest": "90 s" },
+        { "name": "Rear-delt flyes", "sets": "3×15", "rest": "60 s" },
+        { "name": "Towel-grip dead hangs", "sets": "3×max", "rest": "90 s" },
+        { "name": "Plate pinches", "sets": "3×30 s", "rest": "60 s" },
+        { "name": "Thick-bar / fat-grip hold", "sets": "3×30 s", "rest": "60 s" }
+      ]
+    }
+  ],
+  "rules": [
+    "Pull : push set ratio stays about 2 : 1. Every row and pulldown rep ends with the shoulder blade down and back, not shrugged.",
+    "Add 2.5 kg or one rep when you hit the top of the range.",
+    "Never shorten rests on chin-ups, RDLs or rows. Short on time: drop the last isolation exercise instead.",
+    "Skip barbell overhead press until wall slides are clean.",
+    "Off the floor: wall slides + 60 s doorway pec stretch, twice a day."
+  ],
+  "nutrition": {
+    "kcal": { "min": 2000, "max": 2200 },
+    "proteinG": { "min": 150, "max": 170 },
+    "weeklyLossKg": 0.5,
+    "rules": [
+      "Floor 1,700–1,800 kcal, only in 2–3 week blocks, then a week at 2,200. Never under 1,600.",
+      "Week 8 (after Check 2): maintenance week at ~2,600 kcal.",
+      "Weigh daily, use the 7-day average. Adjust intake by 100–150 kcal every two weeks if the average is off the plan line.",
+      "Don't eat back Apple Watch calories. Resting HR +5 bpm for a week means the deficit is too deep or sleep is short — take a maintenance week."
+    ]
+  },
+  "checkpoints": [
+    {
+      "id": "c1", "name": "Check 1", "date": "2026-10-08", "week": 4,
+      "items": [
+        { "text": "Weight 92 kg", "done": false },
+        { "text": "Waist −2 cm", "done": false },
+        { "text": "Wall slide: same failure point, holdable 10 s without shaking", "done": false },
+        { "text": "Dead hang +15 s", "done": false },
+        { "text": "Every lift up at least twice", "done": false }
+      ],
+      "note": "If weight hasn't dropped 1.5 kg: cut 150 kcal."
+    },
+    {
+      "id": "c2", "name": "Check 2", "date": "2026-11-05", "week": 8,
+      "items": [
+        { "text": "Weight 90 kg", "done": false },
+        { "text": "Waist −4 cm", "done": false },
+        { "text": "Wall slide: full height, wrists on wall, 3 of 10 reps", "done": false },
+        { "text": "Chin-ups +2 reps or assistance −10 kg", "done": false }
+      ],
+      "note": "Forearm circumference unchanged is fine — look for hardness and veins. Then a maintenance week at ~2,600 kcal."
+    },
+    {
+      "id": "c3", "name": "Check 3", "date": "2026-12-03", "week": 12,
+      "items": [
+        { "text": "Weight 88 kg", "done": false },
+        { "text": "Waist −6 cm", "done": false },
+        { "text": "10 clean wall slides", "done": false },
+        { "text": "RDL 5 reps at baseline +20 kg", "done": false },
+        { "text": "Dead hang 60 s+", "done": false },
+        { "text": "Farmer's carries 2×45 kg for 40 m", "done": false }
+      ],
+      "note": ""
+    },
+    {
+      "id": "c4", "name": "Final", "date": "2026-12-31", "week": 16,
+      "items": [
+        { "text": "Weight 86 kg (85–87 is on track)", "done": false },
+        { "text": "Waist −8 cm", "done": false },
+        { "text": "Forearm +1 cm on baseline", "done": false },
+        { "text": "5 unassisted chin-ups, or +5 reps on baseline", "done": false },
+        { "text": "Side photo: head over shoulders, shoulders over hips, palms facing thighs", "done": false }
+      ],
+      "note": ""
+    }
+  ]
+}

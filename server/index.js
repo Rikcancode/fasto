@@ -18,6 +18,8 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 80;
 const GOALS_PATH = path.join(__dirname, "..", "data", "goals.json");
+const PLAN_PATH = path.join(__dirname, "..", "data", "plan.json");
+const DEFAULT_PLAN_PATH = path.join(__dirname, "default-plan.json");
 
 // Trust the first proxy hop so throttling sees real client IPs behind a reverse proxy.
 app.set("trust proxy", 1);
@@ -35,6 +37,52 @@ async function readGoals() {
   const raw = await fs.readFile(GOALS_PATH, "utf-8");
   return JSON.parse(raw);
 }
+
+// Training/nutrition plan: data/plan.json, seeded from server/default-plan.json
+// when the data volume doesn't have one yet.
+async function readPlan() {
+  try {
+    return JSON.parse(await fs.readFile(PLAN_PATH, "utf-8"));
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+    return JSON.parse(await fs.readFile(DEFAULT_PLAN_PATH, "utf-8"));
+  }
+}
+
+function validatePlan(plan) {
+  if (!plan || typeof plan !== "object") return "Plan must be an object";
+  if (!Array.isArray(plan.days)) return "Missing days array";
+  for (const day of plan.days) {
+    if (typeof day.name !== "string" || !Array.isArray(day.exercises)) {
+      return "Each day needs a name and an exercises array";
+    }
+  }
+  if (plan.checkpoints !== undefined && !Array.isArray(plan.checkpoints)) return "checkpoints must be an array";
+  if (plan.schedule !== undefined && !Array.isArray(plan.schedule)) return "schedule must be an array";
+  return null;
+}
+
+app.get("/api/plan", async (req, res) => {
+  try {
+    res.json(await readPlan());
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.put("/api/plan", async (req, res) => {
+  try {
+    const problem = validatePlan(req.body);
+    if (problem) {
+      res.status(400).json({ error: problem });
+      return;
+    }
+    await fs.writeFile(PLAN_PATH, JSON.stringify(req.body, null, 2), "utf-8");
+    res.json({ success: true, plan: req.body });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 app.get("/api/withings/auth-url", (req, res) => {
   try {

@@ -741,3 +741,268 @@ canvas {
     right: 0;
   }
 }
+
+/* ---------- Training plan view ---------- */
+.nav-item.active {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+.plan-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.plan-header h1 {
+  margin: 4px 0 0;
+  font-size: 28px;
+}
+
+.plan-today {
+  margin-bottom: 24px;
+}
+
+.plan-today .metric-value {
+  margin-bottom: 16px;
+}
+
+.plan-schedule {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.plan-schedule-day {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 8px;
+  border-radius: 8px;
+  background: #1e293b;
+  font-size: 12px;
+  color: #cbd5e1;
+  min-width: 0;
+}
+
+.plan-schedule-day.today {
+  background: #312e81;
+  color: #ffffff;
+  outline: 1px solid #4f46e5;
+}
+
+.plan-schedule-name {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.plan-schedule-day.today .plan-schedule-name {
+  color: #c7d2fe;
+}
+
+.plan-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.plan-card-head h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.plan-duration {
+  color: #94a3b8;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.plan-list {
+  margin: 0;
+  padding-left: 20px;
+  color: #cbd5e1;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.plan-list li {
+  margin-bottom: 6px;
+}
+
+.plan-days {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+  margin: 24px 0;
+}
+
+.plan-day.today {
+  outline: 1px solid #4f46e5;
+}
+
+.plan-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.plan-table th {
+  text-align: left;
+  font-weight: 500;
+  color: #94a3b8;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0 8px 8px 0;
+}
+
+.plan-table td {
+  padding: 8px 8px 8px 0;
+  border-top: 1px solid #1e293b;
+  vertical-align: top;
+}
+
+.plan-num {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-rest {
+  color: #94a3b8;
+}
+
+.plan-two-col {
+  margin-bottom: 24px;
+}
+
+#plan-nutrition .metrics-grid {
+  margin-bottom: 16px;
+}
+
+#plan-nutrition .metric-value {
+  font-size: 24px;
+  white-space: nowrap;
+}
+
+.plan-checkpoints {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.plan-checkpoint {
+  border-left: 4px solid #1e293b;
+}
+
+.plan-checkpoint.next {
+  border-left-color: #4f46e5;
+}
+
+.plan-checkpoint.partial {
+  border-left-color: #f59e0b;
+}
+
+.plan-checkpoint.hit {
+  border-left-color: #22c55e;
+}
+
+.plan-checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.plan-checklist li {
+  margin-bottom: 8px;
+}
+
+.plan-checklist label {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  cursor: pointer;
+  font-size: 14px;
+  color: #e2e8f0;
+  line-height: 1.4;
+}
+
+.plan-checklist input {
+  margin-top: 3px;
+  accent-color: #4f46e5;
+}
+
+.plan-checklist input:checked + span {
+  color: #94a3b8;
+  text-decoration: line-through;
+}
+
+.plan-note {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.plan-pill {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #1e293b;
+  color: #cbd5e1;
+  white-space: nowrap;
+}
+
+.plan-pill.good { background: rgba(34, 197, 94, 0.18); color: #4ade80; }
+.plan-pill.warn { background: rgba(245, 158, 11, 0.18); color: #fbbf24; }
+.plan-pill.accent { background: rgba(79, 70, 229, 0.25); color: #c7d2fe; }
+
+.plan-json {
+  width: 100%;
+  min-height: 60vh;
+  padding: 12px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  color: #e2e8f0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.plan-editor-help {
+  color: #94a3b8;
+  font-size: 13px;
+  margin: 0 0 12px;
+}
+
+.plan-editor-help code {
+  color: #c7d2fe;
+}
+
+.plan-editor-error {
+  color: #f87171;
+  font-size: 13px;
+  min-height: 1em;
+  margin: 8px 0 0;
+}
+
+@media (max-width: 768px) {
+  .plan-schedule {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .plan-days {
+    grid-template-columns: 1fr;
+  }
+}

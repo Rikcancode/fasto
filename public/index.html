@@ -33,6 +33,14 @@
           <span class="nav-icon">🔗</span>
           <span>Connect Withings</span>
         </a></li>
+        <li><a href="#" id="nav-dashboard" class="nav-item active">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a></li>
+        <li><a href="#" id="nav-training-plan" class="nav-item">
+          <span class="nav-icon">🏋️</span>
+          <span>Training Plan</span>
+        </a></li>
         <li><a href="#" id="nav-plan-settings" class="nav-item">
           <span class="nav-icon">⚙️</span>
           <span>Plan Settings</span>
@@ -55,6 +63,7 @@
         <span></span>
       </button>
 
+      <div id="dashboard-view">
       <section class="cards">
         <div class="card">
           <div class="card-header">
@@ -169,9 +178,68 @@
       <section class="actions">
         <span id="status" class="status">Loading data...</span>
       </section>
+      </div>
+
+      <div id="plan-view" hidden>
+        <section class="plan-header">
+          <div>
+            <p class="metric-label" id="plan-period">--</p>
+            <h1 id="plan-title">Training Plan</h1>
+          </div>
+          <div class="plan-header-actions">
+            <button type="button" class="button" id="edit-plan" style="background: #4f46e5;">Edit plan</button>
+          </div>
+        </section>
+
+        <section class="card plan-today" id="plan-today">
+          <p class="metric-label">Today</p>
+          <p class="metric-value" id="plan-today-session">--</p>
+          <div class="plan-schedule" id="plan-schedule"></div>
+        </section>
+
+        <section class="card" id="plan-warmup">
+          <div class="plan-card-head"><h2>Warm-up</h2><span class="plan-duration" id="plan-warmup-duration"></span></div>
+          <ul class="plan-list" id="plan-warmup-list"></ul>
+        </section>
+
+        <section class="plan-days" id="plan-days"></section>
+
+        <section class="cards plan-two-col">
+          <div class="card" id="plan-nutrition">
+            <h2>Nutrition</h2>
+            <div class="metrics-grid" id="plan-nutrition-metrics"></div>
+            <ul class="plan-list" id="plan-nutrition-rules"></ul>
+          </div>
+          <div class="card" id="plan-rules">
+            <h2>Rules</h2>
+            <ul class="plan-list" id="plan-rules-list"></ul>
+          </div>
+        </section>
+
+        <section class="plan-checkpoints" id="plan-checkpoints"></section>
+        <p class="status" id="plan-status"></p>
+      </div>
 
       <div id="settings-overlay" class="settings-overlay" style="display: none;"></div>
       <div id="username-overlay" class="settings-overlay" style="display: none;"></div>
+      <div id="plan-editor-overlay" class="settings-overlay" style="display: none;"></div>
+      <section id="plan-editor-panel" class="settings-panel">
+        <div class="settings-card">
+          <div class="settings-header">
+            <h2>Edit Training Plan</h2>
+            <button type="button" class="close-btn" id="close-plan-editor">×</button>
+          </div>
+          <div class="settings-section">
+            <p class="plan-editor-help">The plan is stored as JSON in <code>data/plan.json</code>. Edit it here and save; days, exercises, nutrition, rules and checkpoints all come from this file.</p>
+            <textarea id="plan-json" class="plan-json" spellcheck="false"></textarea>
+            <p class="plan-editor-error" id="plan-json-error"></p>
+          </div>
+          <div class="settings-actions">
+            <button type="button" class="button" id="save-plan" style="background: #4f46e5;">Save</button>
+            <button type="button" class="button" id="cancel-plan-editor" style="background: #6b7280;">Cancel</button>
+          </div>
+        </div>
+      </section>
       <section id="username-panel" class="settings-panel">
         <div class="settings-card">
           <div class="settings-header">
@@ -257,5 +325,6 @@
     </main>
 
     <script src="/app.js"></script>
+    <script src="/plan.js"></script>
   </body>
 </html>
