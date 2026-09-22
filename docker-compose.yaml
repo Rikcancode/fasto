@@ -1,10 +1,10 @@
 name: fasto
 services:
   fasto:
-    # Moved from Docker Hub to GitHub's registry, which needs no credentials to
-    # publish. There is no v1.0.0 there yet: that tag is built only when the git tag
-    # is pushed, so this follows latest until you push v1.0.0 again.
-    image: ghcr.io/rikcancode/fasto:latest
+    # Pinned, as it was on Docker Hub. The registry drops the leading v from a git
+    # tag, so v1.0.1 is published as 1.0.1. Cutting a new tag is what builds a new
+    # pinned image; pushing to master only moves :latest.
+    image: ghcr.io/rikcancode/fasto:1.0.1
     container_name: fasto
     ports:
       - mode: ingress
