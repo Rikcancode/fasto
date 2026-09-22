@@ -14,16 +14,14 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY: ghcr.io
-  # Lower case on purpose: the account name has a capital and the registry refuses it.
-  IMAGE_NAME: rikcancode/fasto
+  REGISTRY: docker.io
+  IMAGE_NAME: rikcodes/fasto
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
 
     steps:
       - name: Checkout repository
@@ -32,14 +30,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Nothing to configure: Actions injects this token into every run, and
-      # `packages: write` above is the only permission pushing needs.
-      - name: Log in to the registry
+      - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract metadata (tags, labels)
         id: meta
