@@ -1,7 +1,10 @@
 name: fasto
 services:
   fasto:
-    image: docker.io/rikcodes/fasto:v1.0.0
+    # Moved from Docker Hub to GitHub's registry, which needs no credentials to
+    # publish. There is no v1.0.0 there yet: that tag is built only when the git tag
+    # is pushed, so this follows latest until you push v1.0.0 again.
+    image: ghcr.io/rikcancode/fasto:latest
     container_name: fasto
     ports:
       - mode: ingress
