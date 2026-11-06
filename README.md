@@ -61,6 +61,10 @@ curl -u fasto:yourpassword -X PUT http://your-host:3007/api/goals \
 
 Ten wrong passwords from one IP within 15 minutes blocks that IP for the rest of the window. `/healthz` and the Withings OAuth callback stay open. If `FASTO_PASSWORD` is empty the app runs unprotected and logs a warning at startup.
 
+## TRMNL Display
+
+Fasto can push a summary (7-day averages, position vs plan, 60-day weight chart, today's training) to a TRMNL e-ink display through a Webhook private plugin. Set `TRMNL_WEBHOOK_URL` and paste the templates from `trmnl/`. See [trmnl/README.md](trmnl/README.md).
+
 ## Configuration Files
 
 The app can be configured using:

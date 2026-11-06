@@ -1,0 +1,28 @@
+<div class="layout layout--row layout--stretch gap--large">
+  <div class="fasto-col" style="flex: 1;">
+    <span class="label lg:label--large">Weight · 7-day</span>
+    <span class="value value--xxlarge lg:value--mega fasto-nowrap">{{ weight.avg7 | default: "--" }}<span class="fasto-unit">kg</span></span>
+    <span class="title title--small lg:title--large">{{ weight.delta }}</span>
+    <span class="description lg:description--large">Body fat {{ fat.avg7 | default: "--" }} % · {{ fat.delta }}</span>
+  </div>
+  <div class="fasto-col" style="flex: 2;">
+    {% if chart %}
+    <div class="fasto-chart">
+      <svg viewBox="0 0 1000 300" preserveAspectRatio="none">
+        {% if chart.plan != "" %}<polyline class="plan" points="{{ chart.plan }}" />{% endif %}
+        <polyline class="actual" points="{{ chart.actual }}" />
+      </svg>
+    </div>
+    <div class="fasto-axis">
+      <span class="label label--small">{{ chart.from }}</span>
+      <span class="label label--small">Goal {{ weight.target }} kg · {{ weight.weeksLeft }} wk</span>
+      <span class="label label--small">{{ chart.to }}</span>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">Fasto</span>
+  <span class="instance">{{ updated }}</span>
+</div>

@@ -1,0 +1,87 @@
+<div class="layout layout--row layout--stretch gap--large">
+  <div class="fasto-col" style="flex: 3;">
+    <span class="label lg:label--large">Weight · 7-day average</span>
+    <div class="flex flex--row gap--large" style="align-items: center;">
+      <span class="value value--xxlarge lg:value--mega fasto-nowrap">{{ weight.avg7 | default: "--" }}<span class="fasto-unit">kg</span></span>
+      <div class="flex flex--col gap--xsmall">
+        <span class="title lg:title--xlarge fasto-nowrap">{% if weight.deltaState == "behind" %}<span class="label label--inverted lg:label--large">{{ weight.delta }}</span>{% else %}{{ weight.delta }}{% endif %}</span>
+        <span class="description lg:description--large">Plan {{ weight.plan | default: "--" }} kg<br>Last {{ weight.last }} kg on {{ weight.lastDate }}</span>
+      </div>
+    </div>
+
+    {% if chart %}
+    <div class="fasto-chart">
+      <svg viewBox="0 0 1000 300" preserveAspectRatio="none">
+        <line class="grid" x1="0" y1="0" x2="1000" y2="0" />
+        <line class="grid" x1="0" y1="150" x2="1000" y2="150" />
+        <line class="grid" x1="0" y1="300" x2="1000" y2="300" />
+        {% if chart.plan != "" %}<polyline class="plan" points="{{ chart.plan }}" />{% endif %}
+        <polyline class="actual" points="{{ chart.actual }}" />
+      </svg>
+    </div>
+    <div class="fasto-axis">
+      <span class="label label--small lg:label--base">{{ chart.from }}</span>
+      <span class="label label--small lg:label--base">{{ chart.min }}–{{ chart.max }} kg · dashed = plan</span>
+      <span class="label label--small lg:label--base">{{ chart.to }}</span>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="fasto-col fasto-col--spaced" style="flex: 2;">
+    <div class="item">
+      <div class="meta"></div>
+      <div class="content">
+        <span class="label lg:label--large">Next milestone</span>
+        {% if weight.next %}
+        <span class="value value--large lg:value--xxlarge">{{ weight.next.value }} kg</span>
+        <span class="description lg:description--large">{{ weight.next.date }}{% if fat.next %} · {{ fat.next.value }} % fat{% endif %}</span>
+        {% else %}
+        <span class="value value--large lg:value--xxlarge">--</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="progress-bar lg:progress-bar--large">
+      <div class="content">
+        <span class="label lg:label--large">Goal {{ weight.target }} kg · {{ weight.targetDate }} · {{ weight.weeksLeft }} wk</span>
+        <span class="value value--xxsmall lg:value--small">{{ weight.progressPct | default: 0 }}%</span>
+      </div>
+      <div class="track"><div class="fill" style="width: {{ weight.progressPct | default: 0 }}%"></div></div>
+    </div>
+
+    <div class="item">
+      <div class="meta"></div>
+      <div class="content">
+        <span class="label lg:label--large">Body fat · 7-day average</span>
+        <span class="value value--large lg:value--xxlarge">{{ fat.avg7 | default: "--" }} %</span>
+        <span class="description lg:description--large">{{ fat.delta }} · goal {{ fat.target }} %</span>
+      </div>
+    </div>
+
+    {% if training %}
+    <div class="item item--emphasis-3">
+      <div class="meta"></div>
+      <div class="content">
+        <span class="label lg:label--large">Today · {{ training.day }}</span>
+        <span class="title lg:title--xlarge" data-clamp="1">{{ training.session | default: "Rest" }}</span>
+        {% if training.kcal %}<span class="description lg:description--large">{{ training.kcal }} kcal · {{ training.protein }} g protein</span>{% endif %}
+      </div>
+    </div>
+
+    {% if training.checkpoint %}
+    <div class="item">
+      <div class="meta"></div>
+      <div class="content">
+        <span class="label lg:label--large">{{ training.checkpoint.name }} · {{ training.checkpoint.date }} · in {{ training.checkpoint.daysLeft }} days</span>
+        <span class="description lg:description--large" data-clamp="2" data-clamp-lg="4">{{ training.checkpoint.items | join: " · " }}</span>
+      </div>
+    </div>
+    {% endif %}
+    {% endif %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">Fasto</span>
+  <span class="instance">{% if name %}{{ name }} · {% endif %}updated {{ updated }}</span>
+</div>

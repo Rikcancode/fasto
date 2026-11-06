@@ -1,0 +1,50 @@
+<div class="layout layout--col layout--stretch-x gap--medium">
+  <div class="flex flex--col gap--xsmall">
+    <span class="label lg:label--large">Weight · 7-day</span>
+    <span class="value value--xxlarge lg:value--mega fasto-nowrap">{{ weight.avg7 | default: "--" }}<span class="fasto-unit">kg</span></span>
+    <span class="title title--small lg:title--large">{{ weight.delta }}</span>
+  </div>
+
+  <div class="progress-bar">
+    <div class="content">
+      <span class="label">Goal {{ weight.target }} kg · {{ weight.weeksLeft }} wk</span>
+      <span class="value value--xxsmall">{{ weight.progressPct | default: 0 }}%</span>
+    </div>
+    <div class="track"><div class="fill" style="width: {{ weight.progressPct | default: 0 }}%"></div></div>
+  </div>
+
+  <div class="item">
+    <div class="meta"></div>
+    <div class="content">
+      <span class="label">Body fat · 7-day</span>
+      <span class="value value--large">{{ fat.avg7 | default: "--" }} %</span>
+      <span class="description">{{ fat.delta }}</span>
+    </div>
+  </div>
+
+  {% if weight.next %}
+  <div class="item">
+    <div class="meta"></div>
+    <div class="content">
+      <span class="label">Next milestone</span>
+      <span class="value value--large">{{ weight.next.value }} kg</span>
+      <span class="description">{{ weight.next.date }}</span>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if training.session %}
+  <div class="item item--emphasis-3">
+    <div class="meta"></div>
+    <div class="content">
+      <span class="label">Today · {{ training.day }}</span>
+      <span class="title title--small" data-clamp="2">{{ training.session }}</span>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<div class="title_bar">
+  <span class="title">Fasto</span>
+  <span class="instance">{{ updated }}</span>
+</div>

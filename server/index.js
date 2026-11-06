@@ -11,6 +11,7 @@ import {
   saveUserInfo,
 } from "./withings.js";
 import { basicAuth, authConfig } from "./auth.js";
+import { buildTrmnlPayload, pushToTrmnl, startTrmnlPusher, trmnlConfig } from "./trmnl.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -198,9 +199,39 @@ app.get("/api/dashboard", async (req, res) => {
   }
 });
 
+async function loadTrmnlPayload() {
+  const [goals, measurements, plan, user] = await Promise.all([
+    readGoals(),
+    fetchMeasurements(),
+    readPlan().catch(() => null),
+    fetchUserInfo().catch(() => null),
+  ]);
+  return buildTrmnlPayload({ measurements, goals, plan, user });
+}
+
+// What Fasto sends to the TRMNL webhook; handy for pasting into the markup editor.
+app.get("/api/trmnl/payload", async (req, res) => {
+  try {
+    const payload = await loadTrmnlPayload();
+    res.json({ bytes: Buffer.byteLength(JSON.stringify({ merge_variables: payload })), merge_variables: payload });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/api/trmnl/push", async (req, res) => {
+  try {
+    res.json(await pushToTrmnl(await loadTrmnlPayload(), { force: true }));
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 const HOST = process.env.HOST || "0.0.0.0";
 app.listen(PORT, HOST, () => {
   const { enabled, user } = authConfig();
   console.log(`Withings dashboard running on http://${HOST}:${PORT}`);
   console.log(enabled ? `Basic auth enabled (user: ${user})` : "Basic auth disabled");
+  if (!trmnlConfig().enabled) console.log("TRMNL push disabled (set TRMNL_WEBHOOK_URL to enable)");
+  startTrmnlPusher(loadTrmnlPayload);
 });

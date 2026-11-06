@@ -1,0 +1,13 @@
+<style>
+  .fasto-chart { position: relative; flex: 1 1 auto; min-height: 0; }
+  .fasto-chart svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .fasto-chart .actual { fill: none; stroke: #000; stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .fasto-chart .plan { fill: none; stroke: #777; stroke-width: 2; stroke-dasharray: 10 8; vector-effect: non-scaling-stroke; }
+  .fasto-chart .grid { stroke: #bbb; stroke-width: 1; vector-effect: non-scaling-stroke; }
+  .fasto-col { display: flex; flex-direction: column; align-items: stretch; align-self: stretch; min-width: 0; gap: var(--gap-small, 7px); }
+  .fasto-col--spaced { justify-content: space-between; }
+  .fasto-axis { display: flex; justify-content: space-between; gap: 1em; }
+  .progress-bar .content { justify-content: space-between; gap: 0.5em; }
+  .fasto-unit { font-size: 0.4em; line-height: 1; margin-left: 0.15em; }
+  .fasto-nowrap { white-space: nowrap; }
+</style>

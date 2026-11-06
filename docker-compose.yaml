@@ -16,6 +16,9 @@ services:
       - FASTO_USER=${FASTO_USER:-fasto}
       - FASTO_PASSWORD=${FASTO_PASSWORD:-}
       - WITHINGS_REDIRECT_URI=${WITHINGS_REDIRECT_URI:-http://192.168.68.74:3007/api/withings/callback}
+      - TRMNL_WEBHOOK_URL=${TRMNL_WEBHOOK_URL:-}
+      - TRMNL_PUSH_MINUTES=${TRMNL_PUSH_MINUTES:-30}
+      - TZ=${TZ:-UTC}
     volumes:
       - type: bind
         source: /DATA/AppData/fasto/data
