@@ -1,0 +1,31 @@
+# LaraPaper: self-hosted TRMNL server (BYOS). Paste into ZimaOS → App Store → Custom Install.
+# Before installing, replace APP_KEY with the output of: echo "base64:$(openssl rand -base64 32)"
+name: larapaper
+services:
+  larapaper:
+    image: ghcr.io/usetrmnl/larapaper:latest
+    container_name: larapaper
+    ports:
+      - "4567:8080"
+    environment:
+      - APP_KEY=base64:REPLACE_ME
+      - PHP_OPCACHE_ENABLE=1
+      - TRMNL_PROXY_REFRESH_MINUTES=15
+      - DB_DATABASE=database/storage/database.sqlite
+      - APP_TIMEZONE=UTC
+    volumes:
+      - /DATA/AppData/larapaper/database:/var/www/html/database/storage
+      - /DATA/AppData/larapaper/images:/var/www/html/storage/app/public/images/generated
+    restart: unless-stopped
+x-casaos:
+  architectures: [amd64, arm64]
+  main: larapaper
+  title:
+    en_us: LaraPaper
+  tagline:
+    en_us: Self-hosted server for TRMNL displays
+  category: Utilities
+  icon: https://raw.githubusercontent.com/usetrmnl/byos_laravel/main/public/favicon.svg
+  port_map: "4567"
+  scheme: http
+  index: /
