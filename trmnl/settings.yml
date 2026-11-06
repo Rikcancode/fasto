@@ -1,0 +1,21 @@
+---
+# LaraPaper / trmnlp plugin settings. Build the importable zip with ./build-larapaper-zip.sh
+name: Fasto
+strategy: polling
+polling_verb: get
+polling_url: "{{ fasto_url }}/api/trmnl/poll"
+polling_headers: "x-fasto-token={{ fasto_token }}"
+refresh_interval: 15
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+custom_fields:
+- keyname: fasto_url
+  field_type: string
+  name: Fasto URL
+  description: Fasto's address on your network, without a trailing slash.
+  default: http://192.168.68.74:3007
+- keyname: fasto_token
+  field_type: password
+  name: Fasto poll token
+  description: The TRMNL_POLL_TOKEN value from Fasto's settings.

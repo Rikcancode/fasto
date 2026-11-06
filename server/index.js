@@ -10,7 +10,7 @@ import {
   fetchUserInfo,
   saveUserInfo,
 } from "./withings.js";
-import { basicAuth, authConfig } from "./auth.js";
+import { basicAuth, authConfig, safeEqual } from "./auth.js";
 import { buildTrmnlPayload, pushToTrmnl, startTrmnlPusher, trmnlConfig } from "./trmnl.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -214,6 +214,23 @@ app.get("/api/trmnl/payload", async (req, res) => {
   try {
     const payload = await loadTrmnlPayload();
     res.json({ bytes: Buffer.byteLength(JSON.stringify({ merge_variables: payload })), merge_variables: payload });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Read-only feed for a self-hosted TRMNL server (LaraPaper) to poll over the
+// LAN. It can't send Basic Auth, so it authenticates with TRMNL_POLL_TOKEN in
+// an X-Fasto-Token header (or ?token=). Disabled when the token is unset.
+app.get("/api/trmnl/poll", async (req, res) => {
+  const expected = process.env.TRMNL_POLL_TOKEN;
+  const given = req.get("x-fasto-token") || req.query.token || "";
+  if (!expected || !safeEqual(given, expected)) {
+    res.status(401).json({ error: "Invalid or missing token" });
+    return;
+  }
+  try {
+    res.json(await loadTrmnlPayload());
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

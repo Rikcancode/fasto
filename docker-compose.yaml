@@ -18,6 +18,7 @@ services:
       - WITHINGS_REDIRECT_URI=${WITHINGS_REDIRECT_URI:-http://192.168.68.74:3007/api/withings/callback}
       - TRMNL_WEBHOOK_URL=${TRMNL_WEBHOOK_URL:-}
       - TRMNL_PUSH_MINUTES=${TRMNL_PUSH_MINUTES:-30}
+      - TRMNL_POLL_TOKEN=${TRMNL_POLL_TOKEN:-}
       - TZ=${TZ:-UTC}
     volumes:
       - type: bind

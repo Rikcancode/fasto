@@ -8,10 +8,11 @@ import { timingSafeEqual } from "node:crypto";
  * and logs a warning on startup, so existing installs keep working.
  *
  * Exempt paths: the Withings OAuth callback (the browser is redirected
- * there by Withings) and /healthz (Docker health checks).
+ * there by Withings), /healthz (Docker health checks) and the TRMNL poll
+ * endpoint, which checks its own token (see server/index.js).
  */
 
-const EXEMPT_PATHS = new Set(["/api/withings/callback", "/healthz"]);
+const EXEMPT_PATHS = new Set(["/api/withings/callback", "/healthz", "/api/trmnl/poll"]);
 const REALM = "Fasto";
 
 // Failed-attempt throttle: after MAX_FAILURES wrong passwords from one IP
@@ -20,7 +21,7 @@ const MAX_FAILURES = 10;
 const WINDOW_MS = 15 * 60 * 1000;
 const failures = new Map(); // ip -> { count, first }
 
-function safeEqual(a, b) {
+export function safeEqual(a, b) {
   const bufA = Buffer.from(String(a));
   const bufB = Buffer.from(String(b));
   if (bufA.length !== bufB.length) {
