@@ -13,10 +13,15 @@ services:
       - TRMNL_PROXY_REFRESH_MINUTES=15
       - DB_DATABASE=database/storage/database.sqlite
       - APP_TIMEZONE=UTC
+      # Lets it build https links behind Caddy while staying reachable over plain http on the LAN.
+      - TRUSTED_PROXIES=*
     volumes:
-      - /DATA/AppData/larapaper/database:/var/www/html/database/storage
-      - /DATA/AppData/larapaper/images:/var/www/html/storage/app/public/images/generated
+      - larapaper-database:/var/www/html/database/storage
+      - larapaper-images:/var/www/html/storage/app/public/images/generated
     restart: unless-stopped
+volumes:
+  larapaper-database:
+  larapaper-images:
 x-casaos:
   architectures: [amd64, arm64]
   main: larapaper
