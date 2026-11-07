@@ -2,7 +2,7 @@
   <div class="flex flex--col gap--xsmall">
     <span class="label lg:label--large">Weight · 7-day</span>
     <span class="value value--xxlarge lg:value--mega fasto-nowrap">{{ weight.avg7 | default: "--" }}<span class="fasto-unit">kg</span></span>
-    <div class="flex flex--row gap--small" style="align-items: center;">{{ fasto_face | replace: "fasto-face", "fasto-face fasto-face--small" }}<span class="title title--small lg:title--large">{{ weight.delta }}</span></div>
+    <div class="flex flex--row gap--small" style="align-items: center;"><span class="title title--small lg:title--large">{{ weight.delta }}</span></div>
   </div>
 
   <div class="progress-bar">

@@ -1,17 +1,90 @@
+{% if planChart.weight %}
+{% assign chart_keys = "weight,fat" | split: "," %}
+{% for key in chart_keys %}
+{% assign pc = planChart[key] %}
+{% capture one_chart %}
+{% if pc %}
+{% if key == "weight" %}{% assign unit = "kg" %}{% assign grow = 1 %}{% else %}{% assign unit = "%" %}{% assign grow = 1 %}{% endif %}
+<div class="fasto-plan" style="flex: {{ grow }} 1 0;">
+  <div class="fasto-plan__head">
+    <span class="label lg:label--large">{% if key == "weight" %}Weight plan{% else %}Body fat plan{% endif %} · {{ pc.min }}–{{ pc.max }} {{ unit }}</span>
+    <span class="label lg:label--large">Goal {{ pc.goal }} {{ unit }}</span>
+  </div>
+  <div class="fasto-plan__area">
+    <div class="fasto-plan__past" style="width: {{ pc.todayX | divided_by: 10.0 }}%;"></div>
+    <svg viewBox="0 0 1000 300" preserveAspectRatio="none">
+      <line class="grid" x1="0" y1="150" x2="1000" y2="150" />
+      <polyline class="plan" points="{{ pc.plan }}" />
+      {% if pc.actual != "" %}<polyline class="actual" points="{{ pc.actual }}" />{% endif %}
+      <line class="today" x1="{{ pc.todayX }}" y1="0" x2="{{ pc.todayX }}" y2="300" />
+    </svg>
+    <span class="fasto-today{% if pc.todayX < 60 %} fasto-today--start{% elsif pc.todayX > 940 %} fasto-today--end{% endif %}" style="left: {{ pc.todayX | divided_by: 10.0 }}%;">Today</span>
+    {% for m in pc.milestones %}
+    <span class="fasto-dot fasto-dot--ms" style="left: {{ m.x | divided_by: 10.0 }}%; top: {{ m.y | divided_by: 3.0 }}%;"></span>
+    {% if m.x > pc.todayX %}<span class="fasto-ms-label" style="left: {{ m.x | divided_by: 10.0 }}%; top: {{ m.y | divided_by: 3.0 }}%;">{{ m.v }}</span>{% endif %}
+    {% endfor %}
+    <span class="fasto-dot fasto-dot--goal" style="left: {{ pc.goalX | divided_by: 10.0 }}%; top: {{ pc.goalY | divided_by: 3.0 }}%;"></span>
+    {% if pc.lastX %}<span class="fasto-dot fasto-dot--now" style="left: {{ pc.lastX | divided_by: 10.0 }}%; top: {{ pc.lastY | divided_by: 3.0 }}%;"></span>{% endif %}
+  </div>
+  <div class="fasto-plan__axis">
+    <span class="label label--small lg:label--base" style="left: 0%;">{{ pc.from }}</span>
+    {% if key == "weight" %}{% for m in pc.milestones %}<span class="label label--small lg:label--base fasto-tick" style="left: {{ m.x | divided_by: 10.0 }}%;">{{ m.d }}</span>{% endfor %}{% endif %}
+    <span class="label label--small lg:label--base fasto-tick--end" style="left: 100%;">{{ pc.to }}</span>
+  </div>
+</div>
+{% endif %}
+{% endcapture %}
+{% if key == "weight" %}{% assign chart_weight = one_chart %}{% else %}{% assign chart_fat = one_chart %}{% endif %}
+{% endfor %}
+{% endif %}
 <div class="layout layout--row layout--stretch gap--large">
   <div class="fasto-col" style="flex: 5;">
-    <span class="label lg:label--large">Weight · 7-day average</span>
-    <div class="flex flex--row gap--large" style="align-items: center;">
+    <div class="fasto-hero__head">
+      <span class="label lg:label--large">Weight · 7-day average</span>
+      {% if weight.target %}<span class="label lg:label--large">Goal{% if weight.targetDate %} · {{ weight.targetDate }}{% endif %}</span>{% endif %}
+    </div>
+    <div class="fasto-hero">
       <span class="value value--xxlarge lg:value--mega fasto-nowrap">{{ weight.avg7 | default: "--" }}<span class="fasto-unit">kg</span></span>
-      {{ fasto_face }}
-      <div class="flex flex--col gap--xsmall">
-        <span class="title lg:title--xlarge fasto-nowrap">{% if weight.deltaState == "behind" %}<span class="label label--inverted lg:label--large">{{ weight.delta }} plan</span>{% elsif weight.deltaState == "none" %}--{% else %}{{ weight.delta }}{% if weight.deltaState == "ahead" %} of plan{% endif %}{% endif %}</span>
-        <span class="description lg:description--large">Last weigh-in {{ weight.last }} kg on {{ weight.lastDate }}</span>
+      {% if weight.start and weight.target %}
+      {% assign chev_n = weight.start | minus: weight.target | round %}{% if chev_n > 14 %}{% assign chev_n = 14 %}{% endif %}{% if chev_n < 1 %}{% assign chev_n = 1 %}{% endif %}
+      {% assign chev_done = weight.progressPct | default: 0 | times: chev_n | divided_by: 100.0 | floor %}
+      <div class="fasto-chevrons">{% for i in (1..chev_n) %}<svg class="fasto-chev{% if i <= chev_done %} fasto-chev--done{% endif %}" viewBox="0 0 40 60" aria-hidden="true"><path d="M3 3 H18 L37 30 L18 57 H3 L22 30 Z"/></svg>{% endfor %}</div>
+      <span class="value value--large fasto-nowrap fasto-goal">{{ weight.target }}</span>
+      {% endif %}
+    </div>
+    <div class="fasto-status">
+      {% if weight.deltaState == "behind" %}<span class="label label--inverted lg:label--large">{{ weight.delta }} plan</span>{% elsif weight.deltaState == "none" %}{% else %}<span class="label label--outline lg:label--large">{{ weight.delta }}{% if weight.deltaState == "ahead" %} of plan{% endif %}</span>{% endif %}
+      <span class="description lg:description--large">Last weigh-in {{ weight.last }} kg on {{ weight.lastDate }}</span>
+    </div>
+    <div class="fasto-stats">
+      <div class="fasto-stat"><span class="value value--medium lg:value--large fasto-nowrap">{{ fat.avg7 | default: "--" }}<span class="fasto-unit">%</span></span><span class="label lg:label--large">body fat</span></div>
+      {% if weight.weeksLeft %}<div class="fasto-stat"><span class="value value--medium lg:value--large">{{ weight.weeksLeft }}</span><span class="label lg:label--large">weeks to go</span></div>{% endif %}
+    </div>
+    {% if weight.start and weight.target %}
+    {% assign span = weight.start | minus: weight.target %}
+    {% assign now_pct = weight.progressPct | default: 0 %}
+    {% if weight.plan %}{% assign plan_pct = weight.start | minus: weight.plan | times: 100.0 | divided_by: span | round %}{% if plan_pct < 0 %}{% assign plan_pct = 0 %}{% endif %}{% if plan_pct > 100 %}{% assign plan_pct = 100 %}{% endif %}{% endif %}
+    <div class="fasto-prog">
+      <div class="fasto-prog__head">
+        <span class="label lg:label--large">{{ weight.toGo }} kg to go</span>
+        <span class="value value--xsmall lg:value--small">{{ now_pct }}%</span>
+      </div>
+      <div class="fasto-prog__track">
+        <div class="fasto-prog__fill" style="width: {{ now_pct }}%;"></div>
+        {% for m in planChart.weight.milestones %}{% assign mp = weight.start | minus: m.v | times: 100.0 | divided_by: span %}<span class="fasto-prog__tick" style="left: {{ mp }}%;"></span>{% endfor %}
+        {% if weight.plan %}<span class="fasto-prog__plan" style="left: {{ plan_pct }}%;"></span>{% endif %}
+      </div>
+      <div class="fasto-prog__foot">
+        <span class="label label--small lg:label--base">{{ weight.start }} kg</span>
+        {% if weight.plan %}<span class="label label--small lg:label--base">▲ plan today {{ weight.plan }} kg</span>{% endif %}
+        <span class="label label--small lg:label--base">{{ weight.target }} kg</span>
       </div>
     </div>
-    {{ fasto_dir }}
+    {% endif %}
 
-    {% if chart %}
+    {% if chart_weight %}
+    {{ chart_weight }}
+    {% elsif chart %}
     <div class="fasto-chart">
       <svg viewBox="0 0 1000 300" preserveAspectRatio="none">
         <line class="grid" x1="0" y1="0" x2="1000" y2="0" />
@@ -35,30 +108,43 @@
       <div class="fasto-step">
         <span class="label lg:label--large">Programme start</span>
         <span class="description lg:description--large fasto-when">{{ weight.startDate }}</span>
-        <span class="value value--small lg:value--medium">{{ weight.start }}</span>
+        <span class="value value--small">{{ weight.start }}</span>
       </div>
       {% endif %}
       <div class="fasto-step">
         <span class="label lg:label--large">Plan for today</span>
         <span class="description lg:description--large fasto-when"></span>
-        <span class="value value--small lg:value--medium">{{ weight.plan | default: "--" }}</span>
+        <span class="value value--small">{{ weight.plan | default: "--" }}</span>
       </div>
       <div class="fasto-step fasto-step--now">
+        {% if weight.next and weight.avg7 %}
+        {% assign to_next = weight.avg7 | minus: weight.next.value | round: 1 %}
+        {% if to_next > 0 %}
+        <span class="label lg:label--large">To next milestone</span>
+        <span class="description lg:description--large fasto-when">now {{ weight.avg7 }}</span>
+        <span class="value value--small">−{{ to_next }}</span>
+        {% else %}
+        <span class="label lg:label--large">Below next milestone</span>
+        <span class="description lg:description--large fasto-when">now {{ weight.avg7 }}</span>
+        <span class="value value--small">{{ to_next | abs }}</span>
+        {% endif %}
+        {% else %}
         <span class="label lg:label--large">Now</span>
         <span class="description lg:description--large fasto-when">{{ weight.lastDate }}</span>
-        <span class="value value--small lg:value--medium">{{ weight.avg7 | default: "--" }}</span>
+        <span class="value value--small">{{ weight.avg7 | default: "--" }}</span>
+        {% endif %}
       </div>
       {% unless new_goals %}{% if weight.next %}
       <div class="fasto-step">
         <span class="label lg:label--large">Next milestone</span>
         <span class="description lg:description--large fasto-when">{{ weight.next.date }}</span>
-        <span class="value value--small lg:value--medium">{{ weight.next.value }}</span>
+        <span class="value value--small">{{ weight.next.value }}</span>
       </div>
       {% endif %}{% endunless %}
       <div class="fasto-step">
-        <span class="label lg:label--large">Goal{% if weight.weeksLeft %} · {{ weight.weeksLeft }} wk{% endif %}</span>
+        <span class="label lg:label--large">Goal</span>
         <span class="description lg:description--large fasto-when">{{ weight.targetDate }}</span>
-        <span class="value value--small lg:value--medium">{{ weight.target | default: "--" }}</span>
+        <span class="value value--small">{{ weight.target | default: "--" }}</span>
       </div>
     </div>
 
@@ -70,22 +156,18 @@
     </div>
     {% endif %}
 
-    <div class="progress-bar lg:progress-bar--large">
-      <div class="content">
-        <span class="label lg:label--large">{{ weight.toGo }} kg to go</span>
-        <span class="value value--xxsmall lg:value--small">{{ weight.progressPct | default: 0 }}%</span>
-      </div>
-      <div class="track"><div class="fill" style="width: {{ weight.progressPct | default: 0 }}%"></div></div>
-    </div>
 
+    {% if chart_fat %}
+    {{ chart_fat }}
+    {% else %}
     <div class="item">
       <div class="meta"></div>
       <div class="content">
-        <span class="label lg:label--large">Body fat · 7-day average</span>
-        <span class="value value--medium lg:value--large">{{ fat.avg7 | default: "--" }} %</span>
-        <span class="description lg:description--large">{{ fat.delta }} · goal {{ fat.target }} %</span>
+        <span class="label lg:label--large">Body fat goal</span>
+        <span class="title lg:title--xlarge">{{ fat.target | default: "--" }} % · {{ fat.delta }}</span>
       </div>
     </div>
+    {% endif %}
 
     {% if training %}
     <div class="item item--emphasis-3">

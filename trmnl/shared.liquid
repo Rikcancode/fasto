@@ -1,3 +1,25 @@
+{% comment %} Zen Dots for the numbers, DM Sans for everything else. {% endcomment %}
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600&family=Zen+Dots&display=block" rel="stylesheet">
+<style>
+  .view, .view *, .title_bar, .title_bar * { font-family: 'DM Sans', sans-serif !important; }
+  .view .value, .view .value * { font-family: 'Zen Dots', sans-serif !important; font-weight: 400 !important; letter-spacing: -0.02em; }
+  .view .value .fasto-unit { font-family: 'DM Sans', sans-serif !important; font-weight: 600 !important; margin-right: 0.2em; }
+  .view .value--mega, .view .value--xxlarge { zoom: 0.64; margin-right: 40px; }
+  .fasto-prog { display: flex; flex-direction: column; gap: 6px; }
+  .fasto-prog__head, .fasto-prog__foot { display: flex; justify-content: space-between; align-items: baseline; }
+  .fasto-prog__track { position: relative; height: 34px; border: 3px solid #000; border-radius: 17px; overflow: hidden; background: #fff; }
+  .fasto-prog__fill { position: absolute; left: 0; top: 0; bottom: 0; background: #000; }
+  .fasto-prog__tick { position: absolute; top: 6px; bottom: 6px; width: 3px; background: #888; transform: translateX(-50%); }
+  .fasto-prog__plan { position: absolute; top: -3px; bottom: -3px; width: 6px; background: #000; transform: translateX(-50%); box-shadow: 0 0 0 3px #fff; }
+  .fasto-hero__head { display: flex; justify-content: space-between; }
+  .fasto-hero { display: flex; align-items: center; gap: 10px; }
+  .fasto-hero .value--mega, .fasto-hero .value--xxlarge { margin-right: 0 !important; }
+  .fasto-hero .fasto-goal { font-size: 50px !important; line-height: 1 !important; }
+  .fasto-chevrons { flex: 1 1 auto; min-width: 0; display: flex; justify-content: center; gap: 3px; }
+  .fasto-chev { height: 40px; width: 22px; flex: 0 1 22px; min-width: 8px; fill: #fff; stroke: #000; stroke-width: 4; stroke-linejoin: miter; }
+  .fasto-chev--done { fill: #000; }
+  .fasto-status { display: flex; align-items: center; gap: 16px; }
+</style>
 <style>
   .fasto-chart { position: relative; flex: 1 1 auto; min-height: 0; }
   .fasto-chart svg { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -11,14 +33,10 @@
   .fasto-unit { font-size: 0.4em; line-height: 1; margin-left: 0.15em; }
   .fasto-nowrap { white-space: nowrap; }
   .title_bar .fasto-logo { height: 52px !important; width: 52px !important; max-height: none !important; margin: 0 2px 0 -6px; flex: 0 0 auto; }
-  .fasto-face { width: 64px; height: 64px; flex: 0 0 auto; margin-left: 8px; }
-  .screen--lg .fasto-face { width: 92px; height: 92px; }
-  .fasto-face--small { width: 40px; height: 40px; }
-  .screen--lg .fasto-face--small { width: 56px; height: 56px; }
   .fasto-goals { background: #000; color: #fff; border-radius: 12px; padding: 14px 18px; display: flex; flex-direction: column; gap: 4px; }
   .fasto-goals .title, .fasto-goals .description, .fasto-goals .label { color: #fff; }
   .fasto-journey { display: flex; flex-direction: column; border: 3px solid #000; border-radius: 12px; overflow: hidden; }
-  .fasto-step { display: grid; grid-template-columns: minmax(0,1fr) auto auto; align-items: center; gap: 18px; padding: 10px 16px; border-top: 2px solid #bbb; }
+  .fasto-step { display: grid; grid-template-columns: minmax(0,1fr) auto auto; align-items: center; gap: 18px; padding: 2px 16px; border-top: 2px solid #bbb; }
   .fasto-step:first-child { border-top: 0; }
   .fasto-step .label { flex: 1 1 auto; white-space: nowrap; }
   .fasto-step .description { white-space: nowrap; }
@@ -26,14 +44,31 @@
   .fasto-step .value { text-align: right; min-width: 2.6em; white-space: nowrap; }
   .fasto-step--now { background: #000; }
   .fasto-step--now .label, .fasto-step--now .value, .fasto-step--now .description { color: #fff; }
-  .fasto-dir { display: inline-flex; align-items: center; gap: 10px; border-radius: 10px; padding: 6px 14px; border: 3px solid #000; }
-  .fasto-dir--bad { background: #000; }
-  .fasto-dir--bad .title, .fasto-dir--bad .label, .fasto-dir--bad svg { color: #fff; fill: #fff; }
-  .fasto-dir svg { width: 40px; height: 40px; flex: 0 0 auto; }
+  .fasto-stats { display: flex; gap: 48px; }
+  .fasto-stat { display: flex; align-items: baseline; gap: 14px; white-space: nowrap; }
+  .fasto-plan { display: flex; flex-direction: column; min-height: 0; gap: 6px; }
+  .fasto-plan__head { display: flex; justify-content: space-between; }
+  .fasto-plan__area { position: relative; flex: 1 1 auto; min-height: 60px; margin: 40px 14px 0 14px; }
+  .fasto-plan__area svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .fasto-plan__past { position: absolute; top: 0; bottom: 0; left: 0; background: #e4e4e4; }
+  .fasto-plan .plan { fill: none; stroke: #000; stroke-width: 3; stroke-dasharray: 12 9; vector-effect: non-scaling-stroke; }
+  .fasto-plan .actual { fill: none; stroke: #000; stroke-width: 6; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .fasto-plan .grid { stroke: #ccc; stroke-width: 1; vector-effect: non-scaling-stroke; }
+  .fasto-plan .today { stroke: #000; stroke-width: 3; vector-effect: non-scaling-stroke; }
+  .fasto-dot { position: absolute; border-radius: 50%; transform: translate(-50%, -50%); box-sizing: border-box; }
+  .fasto-dot--ms { width: 16px; height: 16px; background: #fff; border: 3px solid #000; }
+  .fasto-dot--goal { width: 26px; height: 26px; background: #000; border: 4px solid #000; }
+  .fasto-dot--now { width: 30px; height: 30px; background: #000; border: 5px solid #fff; box-shadow: 0 0 0 3px #000; }
+  .fasto-today { position: absolute; top: 0; transform: translate(-50%, -100%); font-size: 18px; font-weight: 700; background: #000; color: #fff; padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
+  .fasto-today--start { transform: translate(-14px, -100%); }
+  .fasto-today--end { transform: translate(calc(-100% + 14px), -100%); }
+  .fasto-ms-label { position: absolute; transform: translate(-50%, -150%); font-size: 18px; line-height: 1; white-space: nowrap; }
+  .fasto-plan__axis { position: relative; height: 1.6em; margin: 0 14px; }
+  .fasto-plan__axis .label { position: absolute; top: 0; white-space: nowrap; }
+  .fasto-plan__axis .fasto-tick { transform: translateX(-50%); }
+  .fasto-plan__axis .fasto-tick--end { transform: translateX(-100%); }
 </style>
 {% capture fasto_logo %}<svg class="fasto-logo" viewBox="0 0 128 128" aria-hidden="true"><image href="data:image/png;base64,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" width="128" height="128"/></svg>{% endcapture %}
-{% comment %} Plan status drives the face: behind the plan line is sad, on it or ahead is happy. {% endcomment %}
-{% capture fasto_face %}{% if weight.deltaState == "behind" %}<svg class="fasto-face" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="45" fill="#fff" stroke="#000" stroke-width="6"/><circle cx="34" cy="40" r="6"/><circle cx="66" cy="40" r="6"/><path d="M30 74 Q50 56 70 74" fill="none" stroke="#000" stroke-width="6" stroke-linecap="round"/><path d="M27 52 q-5 9 0 13 q5 -4 0 -13z" fill="#777"/></svg>{% elsif weight.deltaState == "ahead" or weight.deltaState == "on-track" %}<svg class="fasto-face" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="45" fill="#fff" stroke="#000" stroke-width="6"/><circle cx="34" cy="40" r="6"/><circle cx="66" cy="40" r="6"/><path d="M28 60 Q50 82 72 60" fill="none" stroke="#000" stroke-width="6" stroke-linecap="round"/></svg>{% endif %}{% endcapture %}
 {% comment %} Time for new goals once the target is reached, the goal date has passed, or no goal is set. {% endcomment %}
 {% assign new_goals = false %}
 {% if weight.target == nil %}
@@ -44,21 +79,3 @@
   {% assign new_goals = true %}{% capture goals_reason %}The goal date, {{ weight.targetDate }}, has passed.{% endcapture %}
 {% endif %}
 
-{% comment %} Direction since the programme started: towards the goal is right, away from it is wrong. {% endcomment %}
-{% assign dir_state = "none" %}
-{% if weight.start and weight.avg7 and weight.target %}
-  {% assign dir_change = weight.avg7 | minus: weight.start | round: 1 %}
-  {% assign dir_abs = dir_change | abs %}
-  {% assign goal_down = false %}{% if weight.target < weight.start %}{% assign goal_down = true %}{% endif %}
-  {% if dir_abs < 0.1 %}
-    {% assign dir_state = "flat" %}{% assign dir_text = "No change" %}
-  {% elsif dir_change < 0 %}
-    {% capture dir_text %}{{ dir_abs }} kg down{% endcapture %}
-    {% if goal_down %}{% assign dir_state = "good" %}{% else %}{% assign dir_state = "bad" %}{% endif %}
-  {% else %}
-    {% capture dir_text %}{{ dir_abs }} kg up{% endcapture %}
-    {% if goal_down %}{% assign dir_state = "bad" %}{% else %}{% assign dir_state = "good" %}{% endif %}
-  {% endif %}
-{% endif %}
-{% capture dir_arrow %}{% if dir_change < 0 %}<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 36 L4 18 H14 V4 H26 V18 H36 Z"/></svg>{% elsif dir_state == "flat" %}<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M36 20 L18 4 V14 H4 V26 H18 V36 Z"/></svg>{% else %}<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 4 L36 22 H26 V36 H14 V22 H4 Z"/></svg>{% endif %}{% endcapture %}
-{% capture fasto_dir %}{% if dir_state != "none" %}<div class="fasto-dir{% if dir_state == "bad" %} fasto-dir--bad{% endif %}">{{ dir_arrow }}<span class="title">{{ dir_text }} since {{ weight.startDate | default: "start" }} · {% if dir_state == "good" %}right direction{% elsif dir_state == "bad" %}wrong direction{% else %}holding{% endif %}</span></div>{% endif %}{% endcapture %}

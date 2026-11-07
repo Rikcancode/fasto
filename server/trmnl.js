@@ -186,6 +186,52 @@ function buildChart(series, goals, field) {
   };
 }
 
+// The whole plan period, from the start to the goal date: the plan line through
+// every milestone, the measurements so far, and where today falls, as SVG
+// coordinates in a CHART_W x CHART_H box (y grows downward).
+function buildPlanChart(series, goals, field) {
+  const startIso = goals.goalPeriod?.startDate;
+  const endIso = goals.ultimateGoal?.targetDate;
+  if (!startIso || !endIso) return null;
+  const startT = parseDate(startIso).getTime();
+  const endT = parseDate(endIso).getTime();
+  if (endT <= startT) return null;
+
+  const points = planPoints(goals, series, field).filter((p) => p.t >= startT && p.t <= endT);
+  if (points.length < 2) return null;
+  const actual = series
+    .filter((p) => typeof p.value === "number")
+    .map((p) => ({ t: parseDate(p.date).getTime(), v: p.value }))
+    .filter((p) => p.t >= startT && p.t <= endT);
+
+  const values = points.map((p) => p.v).concat(actual.map((p) => p.v));
+  const pad = field === "weightKg" ? 0.5 : 0.8;
+  const min = Math.floor(Math.min(...values) - pad);
+  const max = Math.ceil(Math.max(...values) + pad);
+  const x = (t) => Math.round(((t - startT) / (endT - startT)) * CHART_W);
+  const y = (v) => Math.round(CHART_H - ((v - min) / (max - min || 1)) * CHART_H);
+  const line = (pts) => pts.map((p) => `${x(p.t)},${y(p.v)}`).join(" ");
+
+  const todayT = Math.min(endT, Math.max(startT, todayUtc().getTime()));
+  const last = actual[actual.length - 1];
+  const milestones = points.slice(1, -1);
+  return {
+    plan: line(points),
+    actual: actual.length > 1 ? line(actual) : "",
+    lastX: last ? x(last.t) : null,
+    lastY: last ? y(last.v) : null,
+    todayX: x(todayT),
+    milestones: milestones.map((p) => ({ x: x(p.t), y: y(p.v), v: round(p.v), d: shortDate(new Date(p.t).toISOString().slice(0, 10)) })),
+    goal: round(points[points.length - 1].v),
+    goalX: x(endT),
+    goalY: y(points[points.length - 1].v),
+    min,
+    max,
+    from: shortDate(startIso),
+    to: shortDate(endIso),
+  };
+}
+
 function trainingToday(plan) {
   if (!plan) return null;
   const now = new Date();
@@ -225,6 +271,10 @@ export function buildTrmnlPayload({ measurements, goals, plan, user }) {
     weight: metricSummary(weight, goals, "weightKg", "kg"),
     fat: metricSummary(bodyFat, goals, "bodyFatPct", "%"),
     chart: buildChart(weight, goals, "weightKg"),
+    planChart: {
+      weight: buildPlanChart(weight, goals, "weightKg"),
+      fat: buildPlanChart(bodyFat, goals, "bodyFatPct"),
+    },
     training: trainingToday(plan),
   };
 }
