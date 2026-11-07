@@ -144,6 +144,7 @@ function metricSummary(series, goals, field, unit) {
     targetDate: shortDate(u?.targetDate),
     weeksLeft,
     start: round(start),
+    startDate: start !== null ? shortDate(goals.goalPeriod.startDate) : null,
     progressPct,
   };
 }
