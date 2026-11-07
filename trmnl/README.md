@@ -18,6 +18,12 @@ There are two ways to drive the display:
 
 The device then only shows what LaraPaper serves; TRMNL cloud plugins stop unless you add equivalents in LaraPaper. After changing a template, run `./build-larapaper-zip.sh` and re-import.
 
+## What the screen shows
+
+- A face next to the weight: sad when the 7-day average is behind the plan, happy when on or ahead of it.
+- A "Time to set new goals" box in place of the next milestone once the goal weight is reached, the goal date has passed, or no goal is set.
+- The logo in the title bar is `logo.png` (the app icon cut out of its background, in greys), embedded in `shared.liquid` as base64 inside an SVG so the TRMNL framework doesn't dither it.
+
 ## How it works (TRMNL cloud)
 
 Fasto runs on the LAN, so TRMNL's cloud can't poll it. Fasto **pushes** instead: every `TRMNL_PUSH_MINUTES` (default 30) it builds a summary of about 1.5 KB and POSTs it to a TRMNL **Webhook** private plugin. TRMNL renders it with the Liquid templates in this folder.

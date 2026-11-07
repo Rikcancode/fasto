@@ -1,7 +1,8 @@
 <div class="layout layout--col layout--stretch-x gap--small">
   <span class="label">Weight · 7-day</span>
   <span class="value value--xlarge lg:value--xxlarge fasto-nowrap">{{ weight.avg7 | default: "--" }}<span class="fasto-unit">kg</span></span>
-  <span class="description">{{ weight.delta }} · fat {{ fat.avg7 | default: "--" }} %</span>
+  <div class="flex flex--row gap--small" style="align-items: center;">{{ fasto_face | replace: "fasto-face", "fasto-face fasto-face--small" }}<span class="description">{{ weight.delta }} · fat {{ fat.avg7 | default: "--" }} %</span></div>
+  {% if new_goals %}<span class="label label--inverted">Time to set new goals</span>{% endif %}
   <div class="progress-bar progress-bar--small">
     <div class="content">
       <span class="label label--small">Goal {{ weight.target }} kg</span>
@@ -12,6 +13,7 @@
 </div>
 
 <div class="title_bar">
+  {{ fasto_logo }}
   <span class="title">Fasto</span>
   <span class="instance">{{ updated }}</span>
 </div>
